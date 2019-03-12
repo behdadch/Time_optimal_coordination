@@ -1,7 +1,7 @@
 function y = MILP(temp,earliestEnter,timeHeadway)
 M = 100;
 size = length(temp);
-f = [1,zeros(1,size)];
+f = [1,zeros(1,size)];%function that we try to minimize
 intcon = 2:1:(size+1);
 A = zeros(size*2,length(f));
 for i = 1:size

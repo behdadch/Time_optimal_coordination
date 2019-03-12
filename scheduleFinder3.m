@@ -21,13 +21,18 @@ for i=1:totalVehicles
             end
             [pStart,pEnd,vStart,vEnd] = mapGeometry(i,m,pathInfo);
             [pStart2,pEnd2,vStart2,vEnd2] = mapGeometry(i,n,pathInfo);
-            earliestEnter = T(i,j-1) + timeOptimal(vStart,vEnd,pStart,pEnd,m);
+            earliestEnter = T(i,j-1) + (vStart,vEnd,pStart,pEnd,m);
             earliestExit = earliestEnter + timeOptimal(vStart2,vEnd2,pStart2,pEnd2,n);
-            if m==1 || m==2;
-                T(i,j)= T(i,j-1) + timeOptimal(vStart,vEnd,pStart,pEnd,m);
-            else
-                T(i,j)=MILP(temp,earliestEnter,timeHeadway);
-            end
+            
+            %The following condition apply constant velocity in the
+            %merging zone
+            %             if m==1 || m==2;
+            %                 T(i,j)= T(i,j-1) + timeOptimal(vStart,vEnd,pStart,pEnd,m);
+            %             else
+            %                 T(i,j)=MILP(temp,earliestEnter,timeHeadway);
+            %             end
+            
+            T(i,j)=MILP(temp,earliestEnter,timeHeadway);
         end
         
     end

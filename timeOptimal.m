@@ -6,11 +6,12 @@ function [t,tIntermediate,optimal] = timeOptimal(vStart,vEnd,pStart,pEnd,zone)
 %is constant
 global u_max
 global u_min
-if (zone == 1 || zone == 2)
-    merging = 1;
-else
-    merging = 0;
-end
+% if (zone == 1 || zone == 2)
+%     merging = 1;
+% else
+%     merging = 0;
+% end
+merging = 0 ; 
 switch merging
     case 0
         pIntermediate = (vEnd^2-vStart^2+2*(u_max*pStart-u_min*pEnd))/(2*(u_max-u_min));
@@ -18,8 +19,7 @@ switch merging
         tIntermediate = (vIntermediate - vStart)/u_max;
         t = tIntermediate + (vEnd - vIntermediate)/u_min;
         optimal = 1; 
-    case 1
-        
+    case 1       
         t = (pEnd - pStart)/(vStart);
         tIntermediate = 0;
         optimal = 0;

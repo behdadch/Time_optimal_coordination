@@ -1,6 +1,6 @@
 function conflictFinder(pathInfo,totalVehicles)
 %This function will find the conflict set for the vehicle i with respect to
-%all the vehicles with smaller index and push it into the global variable
+%all the vehicles with smaller indices and push it into the global variable
 %"conflict" 
 global conflict
 for i=1:totalVehicles

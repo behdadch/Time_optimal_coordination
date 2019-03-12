@@ -9,16 +9,16 @@ global conflict
 global roadLength
 global mergeLength
 global T
-
+totalZones = 22; %Number of zones
+totalVehicles = 4; %Number of vehicles
 %TODO: Defining the value for road length and merge length
 roadLength = 400;
 mergeLength = 30;
-vOut = 30;
+vOut(1:totalVehicles) = 30;
 vMerge = 15;
 u_min = -1;
 u_max = 1;
-totalZones = 16; %Number of zones
-totalVehicles = 16; %three vehicles
+
 timeHeadway = 2.5;
 conflict = zeros(totalVehicles,totalVehicles,totalZones);
 pathInfo = zeros(totalVehicles,totalZones); %three vehicle
@@ -31,30 +31,17 @@ for i = 1:totalVehicles
     x(i).Velocity=[vOut];
     x(i).Control=[];
 end
-TZeros = [0,0,0,0,2,2,2,2,4,4,4,4,6,6,6,6];
+TZeros = [0,0,0,0];
 %TODO: Order of the vehicle index should be added
 
 %in pathInfo(i,j)-> i is vehicle index after order calculation and the j shows the
 % zone that vehicle is in that.
-pathInfo(1,1:3) = [5,2,15];  %Path of the vehicle 3
-pathInfo(2,1:5) = [14,1,11,2,12]; %Path of the vehicle 2
-pathInfo(3,1:5) = [10,1,11,2,12]; %Path of the vehicle 3
-pathInfo(4,1:5) = [16,2,8,1,13];  %Path of the vehicle 4
+pathInfo(1,1:4) = [22,5,7,17];  %Path of the vehicle 1
+pathInfo(2,1:6) = [12,4,13,7,8,19]; %Path of the vehicle 2
+pathInfo(3,1:7) = [10,3,4,13,7,8,19]; %Path of the vehicle 3
+pathInfo(4,1:9) = [18,8,6,5,14,2,1,3,11];  %Path of the vehicle 4
 
-pathInfo(5,1:3) = [5,2,15];
-pathInfo(6,1:5) = [14,1,11,2,12];
-pathInfo(7,1:5) = [10,1,11,2,12];
-pathInfo(8,1:5) = [16,2,8,1,13];
 
-pathInfo(9,1:3) = [5,2,15];
-pathInfo(10,1:5) = [14,1,11,2,12];
-pathInfo(11,1:5) = [10,1,11,2,12];
-pathInfo(12,1:5) = [16,2,8,1,13];
-
-pathInfo(13,1:3) = [5,2,15];
-pathInfo(14,1:5) = [14,1,11,2,12];
-pathInfo(15,1:5) = [10,1,11,2,12];
-pathInfo(16,1:5) = [16,2,8,1,13];
 %%
 %Creation  of conflict Set
 conflictFinder(pathInfo,totalVehicles);
@@ -74,9 +61,9 @@ for i = 1:totalVehicles
             %This is the last Segment
             type(i,j) = "Time-optimal";
             continue
-        elseif m == 1 || m == 2
-            type(i,j) = "Merging-Zone";
-            continue
+%         elseif m == 1 || m == 2
+%             type(i,j) = "Merging-Zone";
+%             continue
         end
         if T(i,j+1) > tCheck
             disp(['Zone ' num2str(m) ' for the vehicle ' num2str(i) ' is not time-optimal'])

@@ -9,7 +9,11 @@ global conflict
 global roadLength
 global mergeLength
 global T
+<<<<<<< HEAD
 %
+=======
+
+>>>>>>> CCTA2019
 %TODO: Defining the value for road length and merge length
 roadLength = 400;
 mergeLength = 30;

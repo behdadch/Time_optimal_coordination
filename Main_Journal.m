@@ -22,7 +22,7 @@ totalVehicles = 16; %three vehicles
 timeHeadway = 2.5;
 conflict = zeros(totalVehicles,totalVehicles,totalZones);
 pathInfo = zeros(totalVehicles,totalZones); %three vehicle
-ANIMATION = true;
+ANIMATION = false;
 PLOT = false;
 %temp = zeros(totalVehicles,1);
 T = 0;
@@ -41,20 +41,20 @@ pathInfo(2,1:5) = [14,1,11,2,12]; %Path of the vehicle 2
 pathInfo(3,1:5) = [10,1,11,2,12]; %Path of the vehicle 3
 pathInfo(4,1:5) = [16,2,8,1,13];  %Path of the vehicle 4
 
-pathInfo(5,1:3) = [5,2,15];  
-pathInfo(6,1:5) = [14,1,11,2,12]; 
-pathInfo(7,1:5) = [10,1,11,2,12]; 
-pathInfo(8,1:5) = [16,2,8,1,13];  
+pathInfo(5,1:3) = [5,2,15];
+pathInfo(6,1:5) = [14,1,11,2,12];
+pathInfo(7,1:5) = [10,1,11,2,12];
+pathInfo(8,1:5) = [16,2,8,1,13];
 
-pathInfo(9,1:3) = [5,2,15];  
-pathInfo(10,1:5) = [14,1,11,2,12]; 
-pathInfo(11,1:5) = [10,1,11,2,12]; 
-pathInfo(12,1:5) = [16,2,8,1,13]; 
+pathInfo(9,1:3) = [5,2,15];
+pathInfo(10,1:5) = [14,1,11,2,12];
+pathInfo(11,1:5) = [10,1,11,2,12];
+pathInfo(12,1:5) = [16,2,8,1,13];
 
-pathInfo(13,1:3) = [5,2,15];  
-pathInfo(14,1:5) = [14,1,11,2,12]; 
-pathInfo(15,1:5) = [10,1,11,2,12]; 
-pathInfo(16,1:5) = [16,2,8,1,13];  
+pathInfo(13,1:3) = [5,2,15];
+pathInfo(14,1:5) = [14,1,11,2,12];
+pathInfo(15,1:5) = [10,1,11,2,12];
+pathInfo(16,1:5) = [16,2,8,1,13];
 %%
 %Creation  of conflict Set
 conflictFinder(pathInfo,totalVehicles);
@@ -109,7 +109,7 @@ for dt=1:3000
                 yy(i) = 2*roadLength+mergeLength- x(i).Position(end);
                 hh(i) = plot(xx(i),yy(i),'.m');
                 hold on;
-            elseif rem(i,4) == 2 
+            elseif rem(i,4) == 2
                 % path #2
                 if x(i).Position(end)<(roadLength+mergeLength/4)
                     xx(i) = roadLength+3*mergeLength/4;
@@ -120,13 +120,13 @@ for dt=1:3000
                 end
                 hh(i) = plot(xx(i),yy(i),'.k');
                 hold on;
-            elseif rem(i,4) == 3 
+            elseif rem(i,4) == 3
                 % path #3
                 xx(i) = x(i).Position(end);
                 yy(i) = roadLength+mergeLength/4;
                 hh(i) = plot(xx(i),yy(i),'.r');
                 hold on
-            elseif rem(i,4) == 0 
+            elseif rem(i,4) == 0
                 if x(i).Position(end)< roadLength+3*mergeLength/4
                     xx(i) = 2*roadLength+7*mergeLength/4;
                     yy(i) = x(i).Position(end);
@@ -150,7 +150,7 @@ for dt=1:3000
             continue
         end
         %time is the current time
-        [x(i).Position(end+1),x(i).Velocity(end+1),x(i).Control(end+1)] = controller(i,j,type,pathInfo,x,time); 
+        [x(i).Position(end+1),x(i).Velocity(end+1),x(i).Control(end+1)] = controller(i,j,type,pathInfo,x,time);
     end
     if ANIMATION
         txt = num2str(time);
@@ -167,18 +167,25 @@ for dt=1:3000
     end
     
 end
-width=4;%inch
-height=2;
+%%
 if PLOT
+    width=4;%inch
+    height=2;
     figure('Units','inches',...
-'Position',[0 0 width height],...
-'PaperPositionMode','auto');
+        'Position',[0 0 width height],...
+        'PaperPositionMode','auto');
     for i=1:totalVehicles
         plot(tx(find(tx==TZeros(i)):(length(x(i).Control)+find(tx==TZeros(i))-1)),x(i).Control(:));
         %title(['velocity',num2str(i)]);
         hold on
     end
 end
+%%
+
+
+
+
+%%%%%%%%%%%%%README%%%%%%%%%%%%
 % axis([0 80 -3 3])
 % set(gca,...
 % 'Units','normalized',...
@@ -199,7 +206,7 @@ end
 % 'FontWeight','normal',...
 % 'FontSize',8,...
 % 'FontName','Times')
-% 
+%
 % box on
 % grid on
 % print -depsc2 myplot.eps

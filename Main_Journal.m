@@ -16,19 +16,19 @@ roadLength = 400;
 mergeLength = 30;
 vOut(1:totalVehicles) = 30;
 vMerge = 15;
-u_min = -1;
-u_max = 1;
+u_min = -3;
+u_max = 3;
 
 timeHeadway = 2.5;
 conflict = zeros(totalVehicles,totalVehicles,totalZones);
-pathInfo = zeros(totalVehicles,totalZones); %three vehicle
+pathInfo = zeros(totalVehicles,totalZones); 
 ANIMATION = false;
-PLOT = false;
+PLOT = true;
 %temp = zeros(totalVehicles,1);
 T = 0;
 for i = 1:totalVehicles
     x(i).Position=[0];
-    x(i).Velocity=[vOut];
+    x(i).Velocity=[vOut(i)];
     x(i).Control=[];
 end
 TZeros = [0,0,0,0];
@@ -75,7 +75,6 @@ for i = 1:totalVehicles
 end
 %TODO: Starting point for the time loop
 %%
-T;
 finish = 0;
 tx=[0];
 if ANIMATION
@@ -161,8 +160,8 @@ if PLOT
     figure('Units','inches',...
         'Position',[0 0 width height],...
         'PaperPositionMode','auto');
-    for i=1:totalVehicles
-        plot(tx(find(tx==TZeros(i)):(length(x(i).Control)+find(tx==TZeros(i))-1)),x(i).Control(:));
+    for i=4
+        plot(tx(find(tx==TZeros(i)):(length(x(i).Velocity)+find(tx==TZeros(i))-1)),x(i).Velocity(:));
         %title(['velocity',num2str(i)]);
         hold on
     end

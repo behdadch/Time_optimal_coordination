@@ -20,7 +20,6 @@ elseif (rem(x,4)==3)
 elseif (rem(x,4)==0)
     distance = [0,L,L+S/2,L+S,L+(3*S)/2,2*L+(3*S)/2,2*L+(4*S)/2,2*L+(5*S)/2,2*L+3*S,3*L+3*S];
 end
-
 pStart = distance(i);
 pEnd = distance(i+1);
 

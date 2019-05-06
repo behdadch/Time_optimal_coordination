@@ -15,8 +15,10 @@ if type(i,j) == "Time-optimal"
         pos = vMerge*(time) + const;
         
         control = 0;
+        fprintf('Check the controller, it is constant velocity');
+        
     else
-        if T(i,j)<= time && time < T(i,j) + tc
+        if T(i,j)<= time && time <= T(i,j) + tc
             control = u_max;
             [b,c]= timeMatrix(pStart,pEnd,vStart,vEnd,T(i,j),T(i,j)+t,1);
         else

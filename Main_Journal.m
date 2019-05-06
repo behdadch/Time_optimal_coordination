@@ -85,7 +85,7 @@ end
 
 
 for dt=1:3000
-    time = (dt)*(0.1);
+    time = (dt)*(0.01);
     tx(end+1)=time;
     for i = 1:totalVehicles
         if ANIMATION
@@ -160,14 +160,14 @@ if PLOT
     figure('Units','inches',...
         'Position',[0 0 width height],...
         'PaperPositionMode','auto');
-    for i=4
-        plot(tx(find(tx==TZeros(i)):(length(x(i).Velocity)+find(tx==TZeros(i))-1)),x(i).Velocity(:));
+    for i=1:1
+        plot(tx(find(tx==TZeros(i)):(length(x(i).Position)+find(tx==TZeros(i))-1)),x(i).Position(:));
         %title(['velocity',num2str(i)]);
         hold on
     end
 end
 %%
-
+%TODO : fix control value at the switching point 
 
 
 

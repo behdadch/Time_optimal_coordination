@@ -13,17 +13,17 @@ global T
 %TODO: Defining the value for road length and merge length
 roadLength = 400;
 mergeLength = 30;
-vOut = 30;
+vOut = 25;
 vMerge = 15;
-u_min = -1;
-u_max = 1;
+u_min = -3;
+u_max = 3;
 totalZones = 16; %Number of zones
 totalVehicles = 16; %three vehicles
-timeHeadway = 2.5;
+timeHeadway = 1.5;
 conflict = zeros(totalVehicles,totalVehicles,totalZones);
 pathInfo = zeros(totalVehicles,totalZones); %three vehicle
 ANIMATION = false;
-PLOT = false;
+PLOT = true;
 %temp = zeros(totalVehicles,1);
 T = 0;
 for i = 1:totalVehicles
@@ -31,7 +31,7 @@ for i = 1:totalVehicles
     x(i).Velocity=[vOut];
     x(i).Control=[];
 end
-TZeros = [0,0,0,0,2,2,2,2,4,4,4,4,6,6,6,6];
+TZeros = [0,0,0,0,2.5,2.5,2.5,2.5,4.5,4.5,4.5,4.5,6.5,6.5,6.5,6.5];
 %TODO: Order of the vehicle index should be added
 
 %in pathInfo(i,j)-> i is vehicle index after order calculation and the j shows the
@@ -98,8 +98,8 @@ if ANIMATION
 end
 
 
-for dt=1:3000
-    time = (dt)*(0.1);
+for dt=1:15000
+    time = (dt)*(0.01);
     tx(end+1)=time;
     for i = 1:totalVehicles
         if ANIMATION
@@ -174,42 +174,64 @@ if PLOT
     figure('Units','inches',...
         'Position',[0 0 width height],...
         'PaperPositionMode','auto');
+    figure(1);
+    for i=1:totalVehicles
+        plot(tx(find(tx==TZeros(i)):(length(x(i).Velocity)+find(tx==TZeros(i))-1)),x(i).Velocity(:));
+        %title(['velocity',num2str(i)]);
+        hold on        
+    end
+    txt1 = 'Speed $(m/s)$';
+    lbl1 = 'speed';
+    ax1 = [0 60 10 45];
+     PrintFig(txt1,lbl1,ax1,5);
+     
+     figure(2)
     for i=1:totalVehicles
         plot(tx(find(tx==TZeros(i)):(length(x(i).Control)+find(tx==TZeros(i))-1)),x(i).Control(:));
         %title(['velocity',num2str(i)]);
-        hold on
+        hold on       
     end
+    txt2 = 'Control input $(m/s^2)$';
+    lbl2 = 'control';
+    ax2 = [0 60 -5 5];
+    PrintFig(txt2,lbl2,ax2,1);    
+%     
+ end
+
+function PrintFig(title,file_label,AXIS,TICK)
+
+axis(AXIS)
+set(gca,...
+'Units','normalized',...
+'YTick',AXIS(3):TICK:AXIS(4),...
+'XTick',AXIS(1):10:AXIS(2),...
+'Position',[.15 .2 .75 .7],...
+'FontUnits','points',...
+'FontWeight','normal',...
+'FontSize',8,...
+'FontName','Times')
+ylabel({title},...
+'FontUnits','points',...
+'interpreter','latex',...
+'FontSize',8,...
+'FontName','Times')
+xlabel({'Time $(s)$'},...
+'FontUnits','points',...
+'interpreter','latex',...
+'FontWeight','normal',...
+'FontSize',8,...
+'FontName','Times')
+box on
+grid on
+print(file_label,'-depsc2')
 end
-%%
 
 
 
 
 %%%%%%%%%%%%%README%%%%%%%%%%%%
-% axis([0 80 -3 3])
-% set(gca,...
-% 'Units','normalized',...
-% 'YTick',-3:1:3,...
-% 'XTick',0:10:80,...
-% 'Position',[.15 .2 .75 .7],...
-% 'FontUnits','points',...
-% 'FontWeight','normal',...
-% 'FontSize',8,...
-% 'FontName','Times')
-% ylabel({'Control input $(m/s^2)$'},...
-% 'FontUnits','points',...
-% 'interpreter','latex',...
-% 'FontSize',8,...
-% 'FontName','Times')
-% xlabel({'Time $(s)$'},...
-% 'FontUnits','points',...
-% 'FontWeight','normal',...
-% 'FontSize',8,...
-% 'FontName','Times')
-%
-% box on
-% grid on
-% print -depsc2 myplot.eps
+
+
 
 
 %Time-Optimal Solution

@@ -23,13 +23,14 @@ timeHeadway = 1.5;
 conflict = zeros(totalVehicles,totalVehicles,totalZones);
 pathInfo = zeros(totalVehicles,totalZones); %three vehicle
 ANIMATION = false;
-PLOT = true;
+PLOT = false;
 %temp = zeros(totalVehicles,1);
 T = 0;
 for i = 1:totalVehicles
     x(i).Position=[0];
     x(i).Velocity=[vOut];
     x(i).Control=[];
+    x(i).Zone=[];
 end
 TZeros = [0,0,0,0,2.5,2.5,2.5,2.5,4.5,4.5,4.5,4.5,6.5,6.5,6.5,6.5];
 %TODO: Order of the vehicle index should be added
@@ -150,13 +151,13 @@ for dt=1:15000
             continue
         end
         %time is the current time
-        [x(i).Position(end+1),x(i).Velocity(end+1),x(i).Control(end+1)] = controller(i,j,type,pathInfo,x,time);
+        [x(i).Position(end+1),x(i).Velocity(end+1),x(i).Control(end+1),x(i).Zone(end+1)] = controller(i,j,type,pathInfo,x,time);
     end
     if ANIMATION
         txt = num2str(time);
         htext=text(1100,720,txt);
         M(dt) = getframe(gcf);
-        pause(0.01);
+        pause(0.001);
         delete(htext)
         for i=1:totalVehicles
             delete(hh(i))
@@ -195,8 +196,17 @@ if PLOT
     lbl2 = 'control';
     ax2 = [0 60 -5 5];
     PrintFig(txt2,lbl2,ax2,1);    
+    
+    %%
+    %figure(3)
+    %vehicle#
+    %v1<v2
+
+
+    
 %     
- end
+end
+     PrintPosition(2,3,x);
 
 function PrintFig(title,file_label,AXIS,TICK)
 
@@ -225,6 +235,21 @@ box on
 grid on
 print(file_label,'-depsc2')
 end
+function PrintPosition(v1,v2,x)
+global conflict
+a = conflict(v2,v1,:);
+b = reshape(a,1,[]);
+B = b(b~=0);
+if isempty(B)
+   disp('!!!!!!!!!!Order is wrong or Path does not have conflict')
+end 
+C1 = B(1);
+F=find(x(v1).Zone(:)== C1,1);
+fprintf('this is %f',F);
+%%need to be completed
+end
+
+
 
 
 

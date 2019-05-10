@@ -1,9 +1,10 @@
-function [pos,vel,control]=controller(i,j,type,pathInfo,x,time)
+function [pos,vel,control,zoneNumber]=controller(i,j,type,pathInfo,x,time)
 global T
 global vMerge
 global u_min
 global u_max
 m = pathInfo(i,j);
+zoneNumber = m;
 [pStart,pEnd,vStart,vEnd] = mapGeometry(i,m,pathInfo);
 
 if type(i,j) == "Time-optimal"

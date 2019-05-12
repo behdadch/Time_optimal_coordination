@@ -23,16 +23,26 @@ timeHeadway = 1.5;
 conflict = zeros(totalVehicles,totalVehicles,totalZones);
 pathInfo = zeros(totalVehicles,totalZones); %three vehicle
 ANIMATION = false;
-PLOT = false;
+PLOT = true;
+RANDOM = false;
 %temp = zeros(totalVehicles,1);
 T = 0;
 for i = 1:totalVehicles
-    x(i).Position=[0];
-    x(i).Velocity=[vOut];
+    x(i).Position =[0.00];
+    x(i).Velocity =[vOut];
     x(i).Control=[];
     x(i).Zone=[];
 end
-TZeros = [0,0,0,0,2.5,2.5,2.5,2.5,4.5,4.5,4.5,4.5,6.5,6.5,6.5,6.5];
+if RANDOM
+tmin = 0;
+tmax = totalVehicles*timeHeadway*1.25;
+n = totalVehicles;
+TZeros = sort(tmin+rand(1,n)*(tmax-tmin));
+TZeros = round(TZeros,2);
+TZeros = TZeros - TZeros(1);
+else
+TZeros = [0,1,1.5,1.7,1.65,2.5,3,3.2,3.15,4,4.5,4.7,4.65,5.5,6,6.2];
+end
 %TODO: Order of the vehicle index should be added
 
 %in pathInfo(i,j)-> i is vehicle index after order calculation and the j shows the
@@ -89,9 +99,8 @@ for i = 1:totalVehicles
 end
 %TODO: Starting point for the time loop
 %%
-T;
 finish = 0;
-tx=[0];
+tx = [0];
 if ANIMATION
     mapBuilder();
     txt2 = 'Time:';
@@ -100,7 +109,11 @@ end
 
 
 for dt=1:15000
-    time = (dt)*(0.01);
+    if ANIMATION
+        time = max((dt)*(0.1));
+    else
+        time = round(max((dt)*(0.01)),2);
+    end
     tx(end+1)=time;
     for i = 1:totalVehicles
         if ANIMATION
@@ -195,18 +208,15 @@ if PLOT
     txt2 = 'Control input $(m/s^2)$';
     lbl2 = 'control';
     ax2 = [0 60 -5 5];
-    PrintFig(txt2,lbl2,ax2,1);    
+    PrintFig(txt2,lbl2,ax2,1);
     
-    %%
-    %figure(3)
-    %vehicle#
-    %v1<v2
-
-
-    
-%     
+    figure(3)
+    %RearEndPosition(6,3,x,tx,TZeros,pathInfo);
+    %figure
+    RearEndPositionZone(11,x,tx,TZeros,pathInfo);
 end
-     PrintPosition(2,3,x);
+%%PostProcessing
+
 
 function PrintFig(title,file_label,AXIS,TICK)
 
@@ -235,18 +245,71 @@ box on
 grid on
 print(file_label,'-depsc2')
 end
-function PrintPosition(v1,v2,x)
+function RearEndPosition(a,b,x,tx,TZeros,pathInfo)
+v = sort([a,b]);
 global conflict
-a = conflict(v2,v1,:);
+a = conflict(v(2),v(1),:);
 b = reshape(a,1,[]);
 B = b(b~=0);
+B = B(B~=1);
+disp(B);
 if isempty(B)
-   disp('!!!!!!!!!!Order is wrong or Path does not have conflict')
+   error('Path does not have conflict or it has lateral collision')
 end 
-C1 = B(1);
-F=find(x(v1).Zone(:)== C1,1);
-fprintf('this is %f',F);
+for i = v
+IndexInitR = find(x(i).Zone(:)== B(1),1);
+IndexEndR = find(x(i).Zone(:)== B(end),1,'last');
+if IndexInitR > IndexEndR
+  error('This function only works if conflict zones of vehicle v1 and v2 are after each other');
+end
+IndexOrig = find(tx==TZeros(i),1);
+IndexInit = IndexOrig + IndexInitR - 1;
+IndexEnd = IndexOrig + IndexEndR - 1;
+[RelativePos,~,~,~] = mapGeometry(i,B(1),pathInfo);
+plot(tx(IndexInit:IndexEnd),x(i).Position(IndexInitR:IndexEndR)-RelativePos);
+hold on
+con = 0 ;
+g = [];
+for j = B
+con = con +1;
+InR = find(x(i).Zone(:)== j ,1,'last');
+PS = x(i).Position(InR)-RelativePos;
+g(end+1) = PS;
+g(end+1) = PS;
+disp([i,j,PS])
+line([0 50],[PS PS]);
+
+hold on
+end
+t = [0,50,50,0];
+g = [0,0,g];
+patch(t,g(1:4),'r','FaceAlpha',.2)
+patch(t,g(3:6),'g','FaceAlpha',.2)
+patch(t,g(5:8),'b','FaceAlpha',.2)
+
+end
+
 %%need to be completed
+end
+function RearEndPositionZone(zone,x,tx,TZeros,pathInfo)
+%Checking the vehicle in the Zones 
+vehicle =[];
+for i=1:length(pathInfo)
+if  any(pathInfo(i,:) == zone)
+    vehicle(end+1) = i;
+end
+end 
+% check relative index for each vehicle when they enter the zone
+for i = vehicle
+IndexInitR = find(x(i).Zone(:)== zone,1);
+IndexEndR = find(x(i).Zone(:)== zone,1,'last');
+IndexOrig = find(tx==TZeros(i),1);
+IndexInit = IndexOrig + IndexInitR - 1;
+IndexEnd = IndexOrig + IndexEndR - 1;
+[RelativePos,~,~,~] = mapGeometry(i,zone,pathInfo);
+plot(tx(IndexInit:IndexEnd),x(i).Position(IndexInitR:IndexEndR)-RelativePos);
+hold on
+end
 end
 
 
@@ -256,7 +319,9 @@ end
 
 %%%%%%%%%%%%%README%%%%%%%%%%%%
 
-
+% h1 = line([20 20],[1 900]);
+% h2 = line([35 35],[1 450]);
+% patch([20,35,35,20],[0,0,450,900],'r','FaceAlpha',.3)
 
 
 %Time-Optimal Solution

@@ -4,7 +4,7 @@ global roadLength
 global mergeLength
 L = roadLength;
 S = mergeLength;
-p=position;
+p = position;
 if (rem(i,4) == 1)
     distance = [0,L,L+S,2*L+S];
 elseif (rem(i,4) == 2)
@@ -21,7 +21,7 @@ if max(distance)< p
     return
 end
 index = find(distance == min(distance(distance>p)))-1;
-  
+%index = max(index,1);
 try
 zone = pathInfo(i,index);
 catch

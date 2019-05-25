@@ -89,8 +89,8 @@ for i = 1:totalVehicles
             type(i,j) = "Merging-Zone";
             continue
         end
-        if T(i,j+1) > tCheck
-            disp(['Zone ' num2str(m) ' for the vehicle ' num2str(i) ' is not time-optimal'])
+        if abs(T(i,j+1) - tCheck)>0.01
+            disp(['Zone ' num2str(m) ' for the vehicle ' num2str(i) ' is not time-optimal','  T ',num2str(T(i,j+1)),'  R  ',num2str(tCheck)])
             type(i,j) = "Energy-optimal";
         else
             type(i,j) = "Time-optimal";
@@ -189,33 +189,39 @@ if PLOT
         'Position',[0 0 width height],...
         'PaperPositionMode','auto');
     figure(1);
-    for i=1:totalVehicles
+    for i=1:4%totalVehicles
         plot(tx(find(tx==TZeros(i)):(length(x(i).Velocity)+find(tx==TZeros(i))-1)),x(i).Velocity(:));
         %title(['velocity',num2str(i)]);
         hold on        
     end
     txt1 = 'Speed $(m/s)$';
     lbl1 = 'speed';
-    ax1 = [0 60 10 45];
+    ax1 = [0 60 0 45];
      PrintFig(txt1,lbl1,ax1,5);
      
-     figure(2)
-    for i=1:totalVehicles
-        plot(tx(find(tx==TZeros(i)):(length(x(i).Control)+find(tx==TZeros(i))-1)),x(i).Control(:));
-        %title(['velocity',num2str(i)]);
-        hold on       
-    end
-    txt2 = 'Control input $(m/s^2)$';
-    lbl2 = 'control';
-    ax2 = [0 60 -5 5];
-    PrintFig(txt2,lbl2,ax2,1);
-    
-    figure(3)
+%      figure(2)
+%     for i=1:totalVehicles
+%         plot(tx(find(tx==TZeros(i)):(length(x(i).Control)+find(tx==TZeros(i))-1)),x(i).Control(:));
+%         %title(['velocity',num2str(i)]);
+%         hold on       
+%     end
+%     txt2 = 'Control input $(m/s^2)$';
+%     lbl2 = 'control';
+%     ax2 = [0 60 -5 5];
+%     PrintFig(txt2,lbl2,ax2,1);
+%     
+    %figure(3)
     %RearEndPosition(6,3,x,tx,TZeros,pathInfo);
     %figure
-    RearEndPositionZone(11,x,tx,TZeros,pathInfo);
+    %RearEndPositionZone(11,x,tx,TZeros,pathInfo);
 end
 %%PostProcessing
+
+% newVid = VideoWriter('simulation2', 'MPEG-4'); % New
+% newVid.Quality = 100;
+% open(newVid);
+% writeVideo(newVid,M);
+%Functions
 
 
 function PrintFig(title,file_label,AXIS,TICK)
@@ -333,9 +339,4 @@ end
 %maybe using structure would be a good idea
 %%
 
-% newVid = VideoWriter('simulation', 'MPEG-4'); % New
-% newVid.Quality = 100;
-% open(newVid);
-% writeVideo(v,M);
-%open(v);
-%Functions
+

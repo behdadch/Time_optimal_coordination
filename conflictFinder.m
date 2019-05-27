@@ -1,4 +1,4 @@
-function conflictFinder(pathInfo,totalVehicles)
+function conflictFinder(path,pathInfo,totalVehicles)
 %This function will find the conflict set for the vehicle i with respect to
 %all the vehicles with smaller indices and push it into the global variable
 %"conflict" 
@@ -6,7 +6,9 @@ global conflict
 for i=1:totalVehicles
     for j=1:totalVehicles 
         if ( j < i )
-            x = nonzeros(intersect(pathInfo(i,:),pathInfo(j,:),'stable')).';
+            k = path(i);
+            kk = path(j);
+            x = nonzeros(intersect(pathInfo(k,:),pathInfo(kk,:),'stable')).';
             size = length(x);
             conflict(i,j,1:size) = x;
         else

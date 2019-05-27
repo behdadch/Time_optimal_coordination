@@ -6,11 +6,6 @@ function [t,tIntermediate,optimal] = timeOptimal(vStart,vEnd,pStart,pEnd,zone)
 %is constant
 global u_max
 global u_min
-% if (zone == 1 || zone == 2)
-%     merging = 1;
-% else
-%     merging = 0;
-% end
 merging = 0 ; 
 switch merging
     case 0

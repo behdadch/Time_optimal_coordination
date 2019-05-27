@@ -1,37 +1,31 @@
-function scheduleFinder3(pathInfo,totalVehicles,timeHeadway,TZeros)
+function scheduleFinder3(path,pathInfo,totalVehicles,timeHeadway,TZeros)
 global T
 for i=1:totalVehicles
     %TODO:Also find the deadline for the vehicles to solve their scheduling
     %problem
-    for j=1:nnz(pathInfo(i,:))
+    PathNumber = path(i);
+    for j=1:nnz(pathInfo(PathNumber,:))
         temp = [];
         k = 1;
         if j == 1
             T(i,j) = TZeros(i);
             
         else
-            m = pathInfo(i,j-1);
-            n = pathInfo(i,j);
+            m = pathInfo(PathNumber,j-1);
+            n = pathInfo(PathNumber,j);
             while k <i
-                if (any(pathInfo(k,:) == n))
-                    x = find(pathInfo(k,:) == n);
+                PN = path(k);
+                if (any(pathInfo(PN,:) == n))
+                    x = find(pathInfo(PN,:) == n);
                     temp(end+1) = T(k,x);
                 end
                 k = k+1;
             end
-            [pStart,pEnd,vStart,vEnd] = mapGeometry(i,m,pathInfo);
-            [pStart2,pEnd2,vStart2,vEnd2] = mapGeometry(i,n,pathInfo);
+            [pStart,pEnd,vStart,vEnd] = mapGeometry(i,m,pathInfo,path);
+            [pStart2,pEnd2,vStart2,vEnd2] = mapGeometry(i,n,pathInfo,path);
             earliestEnter = T(i,j-1) + timeOptimal(vStart,vEnd,pStart,pEnd,m);
             earliestExit = earliestEnter + timeOptimal(vStart2,vEnd2,pStart2,pEnd2,n);
-            
-            %The following condition apply constant velocity in the
-            %merging zone
-            %             if m==1 || m==2;
-            %                 T(i,j)= T(i,j-1) + timeOptimal(vStart,vEnd,pStart,pEnd,m);
-            %             else
-            %                 T(i,j)=MILP(temp,earliestEnter,timeHeadway);
-            %             end
-            
+
             T(i,j)=MILP(temp,earliestEnter,timeHeadway);
         end
         

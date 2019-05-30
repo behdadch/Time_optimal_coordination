@@ -3,6 +3,7 @@ clear
 clc
 global u_min
 global u_max
+global v_max
 global vOut
 global vMerge
 global conflict
@@ -14,16 +15,17 @@ totalVehicles = 4; %Number of vehicles
 %TODO: Defining the value for road length and merge length
 roadLength = 400;
 mergeLength = 30;
-vOut(1:totalVehicles) = 30;
+vOut(1:totalVehicles) = 25;
 vMerge = 15;
-u_min = -5;
-u_max = 5;
+u_min = -3;
+u_max = 3;
+v_max = 35;
 
 timeHeadway = 1.5;
 conflict = zeros(totalVehicles,totalVehicles,totalZones);
 pathInfo = zeros(totalVehicles,totalZones); 
 ANIMATION = false;
-PLOT = true;
+PLOT = false;
 RANDOM = false;
 %temp = zeros(totalVehicles,1);
 T = 0;
@@ -31,6 +33,7 @@ for i = 1:totalVehicles
     x(i).Position=[0];
     x(i).Velocity=[vOut(i)];
     x(i).Control=[];
+    x(i).Zone=[];
 end
 if RANDOM
 tmin = 0;
@@ -41,7 +44,7 @@ TZeros = round(TZeros,2);
 TZeros = TZeros - TZeros(1);
 else
 %TZeros = [0,1,1.5,1.7,1.65,2.5,3,3.2,3.15,4,4.5,4.7,4.65,5.5,6,6.2];
-TZeros = [0,0,0,0];
+TZeros = [0,0.2,0.25,1.2];
 end
 %TODO: Order of the vehicle index should be added
 
@@ -65,7 +68,7 @@ conflictFinder(path,pathInfo,totalVehicles);
 %%
 %Finding schedules
 scheduleFinder3(path,pathInfo,totalVehicles,timeHeadway,TZeros)
-
+T(:,:)=round(T(:,:),2);
 %%
 %Controller
 %Check for the type of zone
@@ -74,7 +77,7 @@ for i = 1:totalVehicles
     for j = 1:nnz(pathInfo(PathNumber,:))
         m = pathInfo(PathNumber,j);
         [pStart,pEnd,vStart,vEnd] = mapGeometry(i,m,pathInfo,path);
-        tCheck = T(i,j) + timeOptimal(vStart,vEnd,pStart,pEnd,m);
+        tCheck = T(i,j) + timeOptimal(vStart,vEnd,pStart,pEnd);
         if j == nnz(pathInfo(PathNumber,:))
             %This is the last Segment
             type(i,j) = "Time-optimal";
@@ -99,8 +102,16 @@ if ANIMATION
     timetext=text(1000,720,txt2);
 end
 
-
-for dt=1:30000
+count = 0;
+dt =1;
+RESTART = false;
+while dt < 3000
+    dt = dt+1;
+    if RESTART==true
+        dt=1; 
+        RESTART = false;
+    end 
+        
     if ANIMATION
         time = max((dt)*(0.1));
     else
@@ -152,12 +163,30 @@ for dt=1:30000
         if tx(end)<= T(i,1)
             continue
         end
-        [m,j,finish] = zoneCheck(i,x(i).Position(end),pathInfo,path);
+        %[m,j,finish] = zoneCheck(i,x(i).Position(end),pathInfo,path);
+        [m,j,finish] = zoneCheck2(i,tx(end),pathInfo,path);
         if finish ==1
             continue
         end
         %time is the current time
-        [x(i).Position(end+1),x(i).Velocity(end+1),x(i).Control(end+1)] = controller(i,j,type,pathInfo,x,time,path);
+        %if constraint is activated then 
+        x(i).Zone(end+1) = m;
+
+        [x(i).Position(end+1),x(i).Velocity(end+1),x(i).Control(end+1)] = controller(i,j,type,pathInfo,time,path);
+        %Check if control constraints becomes violated 
+        if length(x(i).Control)~= 0 && count<1
+        if x(i).Control(end)< u_min 
+            x(i).Control(end)
+            count = count +1;
+            ActivZone = x(i).Zone(end);
+            type(i,ActivZone) = "Umin";
+            x = RESET(x,totalVehicles);
+            RESTART = true; 
+            break
+        end
+        end 
+        
+        %Check if state constraint becomes violated
     end
     if ANIMATION
         txt = num2str(time);
@@ -193,7 +222,7 @@ if PLOT
   %   PrintFig(txt1,lbl1,ax1,5);
      
       figure(2)
-    for i=1:totalVehicles
+    for i=3%:totalVehicles
         plot(tx(find(tx==TZeros(i)):(length(x(i).Control)+find(tx==TZeros(i))-1)),x(i).Control(:));
         %title(['velocity',num2str(i)]);
         hold on       
@@ -310,6 +339,16 @@ plot(tx(IndexInit:IndexEnd),x(i).Position(IndexInitR:IndexEndR)-RelativePos);
 hold on
 end
 end
+function x = RESET(x,totalVehicles)
+global vOut
+for i = 1:totalVehicles
+    x(i).Position=[0];
+    x(i).Velocity=[vOut(i)];
+    x(i).Control=[];
+    x(i).Zone=[];
+end
+end
+
 
 
 

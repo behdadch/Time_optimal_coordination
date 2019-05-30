@@ -23,8 +23,8 @@ for i=1:totalVehicles
             end
             [pStart,pEnd,vStart,vEnd] = mapGeometry(i,m,pathInfo,path);
             [pStart2,pEnd2,vStart2,vEnd2] = mapGeometry(i,n,pathInfo,path);
-            earliestEnter = T(i,j-1) + timeOptimal(vStart,vEnd,pStart,pEnd,m);
-            earliestExit = earliestEnter + timeOptimal(vStart2,vEnd2,pStart2,pEnd2,n);
+            earliestEnter = T(i,j-1) + timeOptimal(vStart,vEnd,pStart,pEnd);
+            earliestExit = earliestEnter + timeOptimal(vStart2,vEnd2,pStart2,pEnd2);
 
             T(i,j)=MILP(temp,earliestEnter,timeHeadway);
         end

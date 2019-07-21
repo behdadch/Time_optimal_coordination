@@ -67,7 +67,7 @@ pathInfo(4,1:9) = [18,8,6,5,14,2,1,3,11];  %Path 4
 conflictFinder(path,pathInfo,totalVehicles);
 %%
 %Finding schedules
-scheduleFinder3(path,pathInfo,totalVehicles,timeHeadway,TZeros)
+scheduleFinderFinal(path,pathInfo,totalVehicles,timeHeadway,TZeros)
 T(:,:)=round(T(:,:),2);
 %%
 %Controller

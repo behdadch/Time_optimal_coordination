@@ -47,7 +47,7 @@ if type(i,j) == "Time-optimal"
         error(msg);        
     end
     
-elseif type(i,j) == "Energy-optimal"
+elseif type(i,j) == "Energy-optimal" || type(i,j) == "Umin"
     %Update each time %[a,b,c,d] = energyMatrix(time,T(i,j+1),x(i).Position(end),pEnd,x(i).Velocity(end),vEnd);
     [a,b,c,d] = energyMatrix(T(i,j),T(i,j+1),pStart,pEnd,vStart,vEnd);
     vel = 0.5*a*(time)^2+b*(time)+c;
@@ -62,9 +62,9 @@ elseif type(i,j) == "Energy-optimal"
     %         pos = vMerge*(time) + const;
     %
     %         control = 0;
-elseif type(i,j) == "Umin"
-    t1
-    t2
+% elseif type(i,j) == "Umin"
+%     t1
+%     t2
     
     
 end

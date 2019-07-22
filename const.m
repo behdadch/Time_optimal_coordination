@@ -10,12 +10,22 @@ clear
 % [sol.tf, sol.t2] = solve(f1-pEnd==0,f2-vEnd==0,tf,t2);
 % sol.tf
 %%
-syms u_max u_min v_max t T t1 t2 tf vStart pStart Pt1 Vt1 pEnd vEnd a b c d
-f1 =  0.5*u_min*(t1^2-T^2) - u_min*T*(t1-T) + vStart*(t1-T) + pStart;
-f2 = (1/6)*a*(t1)^3+0.5*b*(t1)^2+c*(t1)+d;
-f3 =  u_min*(t1-T)+vStart;
-f4 =  0.5*a*(t1)^2+b*(t1)+c;
-f5 = -pEnd + (1/6)*a*(tf)^3+0.5*b*(tf)^2+c*(tf)+d;
-f6 = -vEnd + 0.5*a*(tf)^2+b*(tf)+c;
-[sol.t1,a,b,c,d] = solve(f1==f2,f3==f4,f5==0,f6==0,t1,a,b,c,d)
+% syms u_max u_min v_max t T t1 t2 tf vStart pStart Pt1 Vt1 pEnd vEnd a b c d
+% f1 =  0.5*u_min*(t1^2-T^2) - u_min*T*(t1-T) + vStart*(t1-T) + pStart;
+% f2 = (1/6)*a*(t1)^3+0.5*b*(t1)^2+c*(t1)+d;
+% f3 =  u_min*(t1-T)+vStart;
+% f4 =  0.5*a*(t1)^2+b*(t1)+c;
+% f5 = -pEnd + (1/6)*a*(tf)^3+0.5*b*(tf)^2+c*(tf)+d;
+% f6 = -vEnd + 0.5*a*(tf)^2+b*(tf)+c;
+% [sol.t1,a,b,c,d] = solve(f1==f2,f3==f4,f5==0,f6==0,t1,a,b,c,d);
+syms u_min u_max t_s t_c t_e p_s p_c p_e v_s v_c v_e 
+f1 = u_min*(t_c-t_s) + v_s;
+f2 =  0.5*u_min*(t_c^2-t_s^2)-u_min*t_s*(t_c-t_s)+v_s*(t_c-t_s)+ p_s;
+f3 = u_max*(t_e-t_c) + v_c;
+f4 =  0.5*u_max*(t_e^2-t_c^2)-u_max*t_c*(t_e-t_c)+v_c*(t_e-t_c)+ p_c;
+[t_c,v_c,p_c,t_e] = solve(f1 == v_c , f2 == p_c , f3 == v_e , f4 == p_e ,t_c,v_c,p_c,t_e);
+
+
+
+
 

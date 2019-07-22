@@ -1,4 +1,6 @@
 function [zone,index,finish]=zoneCheck(vehicleIndex,position,pathInfo,path)
+%This function will find zone that CAV is travelling through from the
+%position of the CAV
 finish = 0;
 global roadLength
 global mergeLength

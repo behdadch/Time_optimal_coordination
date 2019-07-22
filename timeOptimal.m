@@ -18,7 +18,7 @@ tf = tIntermediate + (vEnd - vIntermediate)/u_min;
 constrained = false;
 t1 = 0;
 t2 = 0;
-else 
+else  %in this case thye constraint for speed= vmax became active
 constrained = true;
 tIntermediate = 0;%This is a dummy variable in this case.
 t1 = (v_max-vStart)/u_max;

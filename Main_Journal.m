@@ -13,9 +13,9 @@ global T
 totalZones = 22; %Number of zones
 totalVehicles = 4; %Number of vehicles
 %TODO: Defining the value for road length and merge length
-roadLength = 400;
-mergeLength = 30;
-vOut(1:totalVehicles) = 25;
+roadLength = 100;
+mergeLength = 40;
+vOut(1:totalVehicles) = 20;
 vMerge = 15;
 u_min = -3;
 u_max = 3;
@@ -25,7 +25,7 @@ timeHeadway = 1.5;
 conflict = zeros(totalVehicles,totalVehicles,totalZones);
 pathInfo = zeros(totalVehicles,totalZones); 
 ANIMATION = false;
-PLOT = false;
+PLOT = true;
 RANDOM = false;
 %temp = zeros(totalVehicles,1);
 T = 0;
@@ -103,19 +103,19 @@ if ANIMATION
 end
 
 count = 0;
-dt =1;
+dt = 0;
 RESTART = false;
 while dt < 3000
     dt = dt+1;
     if RESTART==true
-        dt=1; 
+        dt=0; 
         RESTART = false;
     end 
         
     if ANIMATION
         time = max((dt)*(0.1));
     else
-        time = round(max((dt)*(0.01)),2);
+        time = round(max((dt)*(0.01)),3);
     end
     tx(end+1)=time;
     for i = 1:totalVehicles
@@ -174,17 +174,17 @@ while dt < 3000
 
         [x(i).Position(end+1),x(i).Velocity(end+1),x(i).Control(end+1)] = controller(i,j,type,pathInfo,time,path);
         %Check if control constraints becomes violated 
-        if length(x(i).Control)~= 0 && count<1
-        if x(i).Control(end)< u_min 
-            x(i).Control(end)
-            count = count +1;
-            ActivZone = x(i).Zone(end);
-            type(i,ActivZone) = "Umin";
-            x = RESET(x,totalVehicles);
-            RESTART = true; 
-            break
-        end
-        end 
+%         if length(x(i).Control)~= 0 && count<1
+%         if x(i).Control(end)< u_min 
+%             x(i).Control(end);
+%             count = count +1;
+%             ActivZone = x(i).Zone(end);
+%             type(i,ActivZone) = "Umin";
+%             %x = RESET(x,totalVehicles);
+%             %RESTART = true; 
+%             break
+%         end
+%         end 
         
         %Check if state constraint becomes violated
     end
@@ -211,7 +211,7 @@ if PLOT
         'Position',[0 0 width height],...
         'PaperPositionMode','auto');
     figure(1);
-    for i=1:totalVehicles
+    for i=3%1:totalVehicles
         plot(tx(find(tx==TZeros(i)):(length(x(i).Velocity)+find(tx==TZeros(i))-1)),x(i).Velocity(:));
         %title(['velocity',num2str(i)]);
         hold on        
@@ -244,7 +244,7 @@ end
 % open(newVid);
 % writeVideo(newVid,M);
 %Functions
-
+%%
 
 function PrintFig(title,file_label,AXIS,TICK)
 

@@ -4,24 +4,27 @@ clc
 global u_min
 global u_max
 global v_max
+global v_min
 global vOut
 global vMerge
 global conflict
 global roadLength
 global mergeLength
 global T
+global timeHeadway
 totalZones = 22; %Number of zones
 totalVehicles = 4; %Number of vehicles
 %TODO: Defining the value for road length and merge length
-roadLength = 100;
+roadLength = 400;
 mergeLength = 40;
-vOut(1:totalVehicles) = 20;
-vMerge = 15;
-u_min = -3;
-u_max = 3;
-v_max = 35;
+vOut(1:totalVehicles) = 35;
+vMerge = 25;
+u_min = -5;
+u_max = 5;
+v_max = 40;
+v_min = 5;%TODO:Need to be set carefully 
 
-timeHeadway = 1.5;
+timeHeadway = 1;
 conflict = zeros(totalVehicles,totalVehicles,totalZones);
 pathInfo = zeros(totalVehicles,totalZones); 
 ANIMATION = false;

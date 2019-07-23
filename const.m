@@ -18,13 +18,20 @@ clear
 % f5 = -pEnd + (1/6)*a*(tf)^3+0.5*b*(tf)^2+c*(tf)+d;
 % f6 = -vEnd + 0.5*a*(tf)^2+b*(tf)+c;
 % [sol.t1,a,b,c,d] = solve(f1==f2,f3==f4,f5==0,f6==0,t1,a,b,c,d);
-syms u_min u_max t_s t_c t_e p_s p_c p_e v_s v_c v_e 
-f1 = u_min*(t_c-t_s) + v_s;
-f2 =  0.5*u_min*(t_c^2-t_s^2)-u_min*t_s*(t_c-t_s)+v_s*(t_c-t_s)+ p_s;
-f3 = u_max*(t_e-t_c) + v_c;
-f4 =  0.5*u_max*(t_e^2-t_c^2)-u_max*t_c*(t_e-t_c)+v_c*(t_e-t_c)+ p_c;
-[t_c,v_c,p_c,t_e] = solve(f1 == v_c , f2 == p_c , f3 == v_e , f4 == p_e ,t_c,v_c,p_c,t_e);
-
+% syms u_min u_max t_s t_c t_e p_s p_c p_e v_s v_c v_e 
+% f1 = u_min*(t_c-t_s) + v_s;
+% f2 =  0.5*u_min*(t_c^2-t_s^2)-u_min*t_s*(t_c-t_s)+v_s*(t_c-t_s)+ p_s;
+% f3 = u_max*(t_e-t_c) + v_c;
+% f4 =  0.5*u_max*(t_e^2-t_c^2)-u_max*t_c*(t_e-t_c)+v_c*(t_e-t_c)+ p_c;
+% [t_c,v_c,p_c,t_e] = solve(f1 == v_c , f2 == p_c , f3 == v_e , f4 == p_e ,t_c,v_c,p_c,t_e);
+syms u_min u_max v_min t_s t1 t2 tf pStart p_1 p_2 pEnd vStart v_1 v_2 vEnd 
+t_s=0;
+f1 = u_min*(t1-t_s) + vStart;
+f2 =  0.5*u_min*(t1^2-t_s^2)-u_min*t1*(t1-t_s)+vStart*(t1-t_s)+ pStart;
+f3 = p_1 + v_min*(t2-t1);
+f4 = u_max*(tf-t2) + v_min;
+f5 =  0.5*u_max*(tf^2-t2^2)-u_max*t2*(tf-t2)+v_min*(tf-t2)+ p_2;
+[t1,t2,tf,p_1,p_2] = solve(f1 == v_min , f2 == p_1 ,f3 == p_2, f4 == vEnd , f5 == pEnd ,t1,t2,tf,p_1,p_2)
 
 
 

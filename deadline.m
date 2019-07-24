@@ -25,13 +25,11 @@ else  %in this case thye constraint for speed= vmax became active
     
     constrained = true;
     tIntermediate = 0;%This is a dummy variable in this case.
-    
-    t1 = -(vStart - v_min)/u_min;
-
-    tf = -(u_min*vEnd^2 - 3*u_max*vStart^2 + u_min*v_min^2 - 3*u_max*v_min^2 - 2*pEnd*u_min*u_max + 2*pStart*u_min*u_max - 2*u_min*vEnd*v_min + 6*u_max*vStart*v_min)/(2*u_min*u_max*v_min);
-
-    t2 = (3*u_max*vStart^2 - u_min*vEnd^2 + u_min*v_min^2 + 3*u_max*v_min^2 + 2*pEnd*u_min*u_max - 2*pStart*u_min*u_max - 6*u_max*vStart*v_min)/(2*u_min*u_max*v_min);
-
+    t1 = (-vStart + v_min)/u_min;
+    p1 = (v_min^2-vStart^2)/(2*u_min)+pStart;
+    p2 = (v_min^2-vEnd^2)/(2*u_max)+pEnd;
+    t2 = (p2-p1)/v_min+t1;
+    tf = (vEnd-v_min)/u_max + t2;
 end
 end
 

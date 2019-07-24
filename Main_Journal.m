@@ -16,15 +16,15 @@ totalZones = 22; %Number of zones
 totalVehicles = 4; %Number of vehicles
 %TODO: Defining the value for road length and merge length
 roadLength = 400;
-mergeLength = 40;
+mergeLength = 30;
 vOut(1:totalVehicles) = 35;
 vMerge = 25;
-u_min = -5;
-u_max = 5;
+u_min = -3;
+u_max = 3;
 v_max = 40;
 v_min = 5;%TODO:Need to be set carefully 
 
-timeHeadway = 1;
+timeHeadway = 1.5;
 conflict = zeros(totalVehicles,totalVehicles,totalZones);
 pathInfo = zeros(totalVehicles,totalZones); 
 ANIMATION = false;
@@ -47,7 +47,7 @@ TZeros = round(TZeros,2);
 TZeros = TZeros - TZeros(1);
 else
 %TZeros = [0,1,1.5,1.7,1.65,2.5,3,3.2,3.15,4,4.5,4.7,4.65,5.5,6,6.2];
-TZeros = [0,0.2,0.25,1.2];
+TZeros = [0,0,0,0];
 end
 %TODO: Order of the vehicle index should be added
 

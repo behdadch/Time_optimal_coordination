@@ -3,7 +3,6 @@ global T
 global u_min
 global u_max
 global v_max
-global v_min
 PathNumber = path(i);
 m = pathInfo(PathNumber,j);
 [pStart,pEnd,vStart,vEnd] = mapGeometry(i,m,pathInfo,path);
@@ -61,35 +60,40 @@ elseif type(i,j) == "Latest-Time"
     if constrained == false
         if T(i,j)<= time && time <= T(i,j) + tc
             control = u_min;
-            vel = control*(time-T(i,j))+vStart;
-            pos = 0.5*control*(time^2-T(i,j)^2)-control*T(i,j)*(time-T(i,j))+vStart*(time-T(i,j))+pStart;
+            TX = T(i,j)+ t1;
+            TX2 = T(i,j)+ t2;
+            Pt1 = 0.5*u_max*(TX^2-T(i,j)^2)-u_max*T(i,j)*(TX-T(i,j))+vStart*(TX-T(i,j))+pStart;
+            Pt2 = v_max*(TX2-TX)+Pt1; 
+            vel = control*(time-TX2)+v_max;
+            pos = 0.5*control*(time^2-TX2^2)-control*TX2*(time-TX2)+v_max*(time-TX2)+Pt2;
         else
-            control = u_max;
-            TX = T(i,j) + tc
-            PC = 0.5*u_min*(TX^2-T(i,j)^2)-u_min*T(i,j)*(TX-T(i,j))+vStart*(TX-T(i,j))+pStart;
-            VC = u_min*(TX-T(i,j))+vStart;
-            vel = control*(time-TX) + VC;
-            pos = 0.5*control*(time^2-TX^2)-control*TX*(time-TX)+VC*(time-TX)+PC;
-        end
-    elseif constrained == true 
-        if T(i,j)<= time && time <= T(i,j) + t1
             control = u_min;
+            [b,c]= timeMatrix(pStart,pEnd,vStart,vEnd,T(i,j),T(i,j)+t,0);
+        end
+        
+        vel = control*time + b;
+        
+        pos = 0.5*control*time^2 + b*time + c;
+        
+    elseif constrained == true
+        if T(i,j)<= time && time <= T(i,j) + t1
+            control = u_max;
             vel = control*(time-T(i,j))+ vStart;
             pos = 0.5*control*(time^2-T(i,j)^2)-control*T(i,j)*(time-T(i,j))+vStart*(time-T(i,j))+pStart;
         elseif T(i,j)+ t1 <= time && time <= T(i,j) + t2
             control = 0;
-            vel = v_min;
+            vel = v_max;
             TX = T(i,j)+ t1;
-            Pt1 = 0.5*u_min*(TX^2-T(i,j)^2)-u_min*T(i,j)*(TX-T(i,j))+vStart*(TX-T(i,j))+pStart;
+            Pt1 = 0.5*u_max*(TX^2-T(i,j)^2)-u_max*T(i,j)*(TX-T(i,j))+vStart*(TX-T(i,j))+pStart;
             pos = vel*(time-TX)+Pt1; 
         elseif T(i,j)+ t2 <= time && time <= T(i,j) + t
-            control = u_max;
+            control = u_min;
             TX = T(i,j)+ t1;
             TX2 = T(i,j)+ t2;
-            Pt1 = 0.5*u_min*(TX^2-T(i,j)^2)-u_min*T(i,j)*(TX-T(i,j))+vStart*(TX-T(i,j))+pStart;
-            Pt2 = v_min*(TX2-TX)+Pt1; 
-            vel = control*(time-TX2)+v_min;
-            pos = 0.5*control*(time^2-TX2^2)-control*TX2*(time-TX2)+v_min*(time-TX2)+Pt2;
+            Pt1 = 0.5*u_max*(TX^2-T(i,j)^2)-u_max*T(i,j)*(TX-T(i,j))+vStart*(TX-T(i,j))+pStart;
+            Pt2 = v_max*(TX2-TX)+Pt1; 
+            vel = control*(time-TX2)+v_max;
+            pos = 0.5*control*(time^2-TX2^2)-control*TX2*(time-TX2)+v_max*(time-TX2)+Pt2;
         end 
     else
         msg = 'Error occurred in defining "constrained" variable.';

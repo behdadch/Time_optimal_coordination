@@ -73,9 +73,6 @@ conflictFinder(path,pathInfo,totalVehicles);
 %%
 %Finding Earliest travel time for each segment for each CAV
 ReleaseDeadlineFinder(path,pathInfo,totalVehicles);
-R(:,:)=round(R(:,:),2);
-D(:,:)=round(D(:,:),2);
-
 %%
 %Finding schedules
 scheduleFinderTest(path,pathInfo,totalVehicles,timeHeadway,TZeros)
@@ -88,14 +85,33 @@ for i = 1:totalVehicles
     PathNumber = path(i);
     for j = 1:nnz(pathInfo(PathNumber,:))
         m = pathInfo(PathNumber,j);
-        if abs(T(i,j+1) - T(i,j)-R(i,j))<0.01
+        [pStart,pEnd,vStart,vEnd] = mapGeometry(i,m,pathInfo,path);
+        tCheck = T(i,j) + timeOptimal(vStart,vEnd,pStart,pEnd);
+        if j == nnz(pathInfo(PathNumber,:))
+            %This is the last Segment
             type(i,j) = "Time-optimal";
-        elseif abs(T(i,j+1) - T(i,j)-D(i,j))<0.01
-            %disp(['Zone ' num2str(m) ' for the vehicle ' num2str(i) ' is time-optimal','  T ',num2str(T(i,j+1)),'  R  ',num2str(tCheck)])
-            type(i,j) = "Latest-Time";
-        else 
+            continue
+        end
+        if abs(T(i,j+1) - tCheck)>0.01
+            disp(['Zone ' num2str(m) ' for the vehicle ' num2str(i) ' is not time-optimal','  T ',num2str(T(i,j+1)),'  R  ',num2str(tCheck)])
             type(i,j) = "Energy-optimal";
-            disp(['Zone ' num2str(m) ' for the vehicle ' num2str(i) ' is not time-optimal'])
+        else
+            %disp(['Zone ' num2str(m) ' for the vehicle ' num2str(i) ' is time-optimal','  T ',num2str(T(i,j+1)),'  R  ',num2str(tCheck)])
+            type(i,j) = "Time-optimal";
+        end
+    end
+end
+%%
+for i = 1:totalVehicles
+    PathNumber = path(i);
+    for j = 1:nnz(pathInfo(PathNumber,:))
+        m = pathInfo(PathNumber,j);
+        if abs(T(i,j+1) - tCheck)>0.01
+            disp(['Zone ' num2str(m) ' for the vehicle ' num2str(i) ' is not time-optimal','  T ',num2str(T(i,j+1)),'  R  ',num2str(tCheck)])
+            type(i,j) = "Energy-optimal";
+        else
+            %disp(['Zone ' num2str(m) ' for the vehicle ' num2str(i) ' is time-optimal','  T ',num2str(T(i,j+1)),'  R  ',num2str(tCheck)])
+            type(i,j) = "Time-optimal";
         end
     end
 end
@@ -218,7 +234,7 @@ if PLOT
         'Position',[0 0 width height],...
         'PaperPositionMode','auto');
     figure(1);
-    for i=1:totalVehicles
+    for i=3%1:totalVehicles
         plot(tx(find(tx==TZeros(i)):(length(x(i).Velocity)+find(tx==TZeros(i))-1)),x(i).Velocity(:));
         %title(['velocity',num2str(i)]);
         hold on        
@@ -229,7 +245,7 @@ if PLOT
   %   PrintFig(txt1,lbl1,ax1,5);
      
       figure(2)
-    for i=1:totalVehicles
+    for i=3%:totalVehicles
         plot(tx(find(tx==TZeros(i)):(length(x(i).Control)+find(tx==TZeros(i))-1)),x(i).Control(:));
         %title(['velocity',num2str(i)]);
         hold on       

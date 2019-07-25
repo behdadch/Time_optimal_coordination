@@ -1,8 +1,7 @@
 function scheduleFinderFinal(path,pathInfo,totalVehicles,timeHeadway,TZeros)
 global T
 for i=1:totalVehicles
-    %TODO:Also find the deadline for the vehicles to solve their scheduling
-    %problem
+
     PathNumber = path(i);
     
     

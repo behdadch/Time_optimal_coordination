@@ -17,18 +17,18 @@ global timeHeadway
 totalZones = 22; %Number of zones
 totalVehicles = 4; %Number of vehicles
 %TODO: Defining the value for road length and merge length
-roadLength = 400;
+roadLength = 200;
 mergeLength = 30;
-vOut(1:totalVehicles) = 35;
-vMerge = 25;
+vOut(1:totalVehicles) = 30;
+vMerge = 20;
 u_min = -3;
 u_max = 3;
 v_max = 40;
-v_min = 5;%TODO:Need to be set carefully 
+v_min = 19.5;%TODO:Need to be set carefully
 
-timeHeadway = 1.5;
+timeHeadway = 1;
 conflict = zeros(totalVehicles,totalVehicles,totalZones);
-pathInfo = zeros(totalVehicles,totalZones); 
+pathInfo = zeros(totalVehicles,totalZones);
 ANIMATION = false;
 PLOT = true;
 RANDOM = false;
@@ -41,15 +41,15 @@ for i = 1:totalVehicles
     x(i).Zone=[];
 end
 if RANDOM
-tmin = 0;
-tmax = totalVehicles*timeHeadway*1.25;
-n = totalVehicles;
-TZeros = sort(tmin+rand(1,n)*(tmax-tmin));
-TZeros = round(TZeros,2);
-TZeros = TZeros - TZeros(1);
+    tmin = 0;
+    tmax = totalVehicles*timeHeadway*1.25;
+    n = totalVehicles;
+    TZeros = sort(tmin+rand(1,n)*(tmax-tmin));
+    TZeros = round(TZeros,2);
+    TZeros = TZeros - TZeros(1);
 else
-%TZeros = [0,1,1.5,1.7,1.65,2.5,3,3.2,3.15,4,4.5,4.7,4.65,5.5,6,6.2];
-TZeros = [0,0,0,0];
+    %TZeros = [0,1,1.5,1.7,1.65,2.5,3,3.2,3.15,4,4.5,4.7,4.65,5.5,6,6.2];
+    TZeros = [0,0,0,0];
 end
 %TODO: Order of the vehicle index should be added
 
@@ -91,9 +91,8 @@ for i = 1:totalVehicles
         if abs(T(i,j+1) - T(i,j)-R(i,j))<0.01
             type(i,j) = "Time-optimal";
         elseif abs(T(i,j+1) - T(i,j)-D(i,j))<0.01
-            %disp(['Zone ' num2str(m) ' for the vehicle ' num2str(i) ' is time-optimal','  T ',num2str(T(i,j+1)),'  R  ',num2str(tCheck)])
             type(i,j) = "Latest-Time";
-        else 
+        else
             type(i,j) = "Energy-optimal";
             disp(['Zone ' num2str(m) ' for the vehicle ' num2str(i) ' is not time-optimal'])
         end
@@ -112,13 +111,15 @@ end
 count = 0;
 dt = 0;
 RESTART = false;
+solved = nan;
 while dt < 3000
     dt = dt+1;
     if RESTART==true
-        dt=0; 
+        dt=1;
+        tx =[0];
         RESTART = false;
-    end 
-        
+    end
+    
     if ANIMATION
         time = max((dt)*(0.1));
     else
@@ -176,22 +177,25 @@ while dt < 3000
             continue
         end
         %time is the current time
-        %if constraint is activated then 
+        %if constraint is activated then
         x(i).Zone(end+1) = m;
-
-        [x(i).Position(end+1),x(i).Velocity(end+1),x(i).Control(end+1)] = controller(i,j,type,pathInfo,time,path);
-        %Check if control constraints becomes violated 
-%         if length(x(i).Control)~= 0 && count<1
-%         if x(i).Control(end)< u_min 
-%             x(i).Control(end);
-%             count = count +1;
-%             ActivZone = x(i).Zone(end);
-%             type(i,ActivZone) = "Umin";
-%             %x = RESET(x,totalVehicles);
-%             %RESTART = true; 
-%             break
-%         end
-%         end 
+        
+        [x(i).Position(end+1),x(i).Velocity(end+1),x(i).Control(end+1),solved] = controller(i,j,type,pathInfo,time,path,solved);
+        %Check if control constraints becomes violated
+        if length(x(i).Control)~= 0 && count<1
+            if x(i).Control(end)< u_min
+                x(i).Control(end)
+                count = count +1;
+                ActivZone = x(i).Zone(end);
+                PN = path(i);
+                zoneNumber = find(pathInfo(PN,:) == ActivZone);
+                type(i,zoneNumber) = "Umin";
+                x = RESET(x,totalVehicles);
+                RESTART = true;
+                solved = 0;
+                break
+            end
+        end
         
         %Check if state constraint becomes violated
     end
@@ -221,24 +225,24 @@ if PLOT
     for i=1:totalVehicles
         plot(tx(find(tx==TZeros(i)):(length(x(i).Velocity)+find(tx==TZeros(i))-1)),x(i).Velocity(:));
         %title(['velocity',num2str(i)]);
-        hold on        
+        hold on
     end
     txt1 = 'Speed $(m/s)$';
     lbl1 = 'speed';
     ax1 = [0 60 0 45];
-  %   PrintFig(txt1,lbl1,ax1,5);
-     
-      figure(2)
+    %   PrintFig(txt1,lbl1,ax1,5);
+    
+    figure(2)
     for i=1:totalVehicles
         plot(tx(find(tx==TZeros(i)):(length(x(i).Control)+find(tx==TZeros(i))-1)),x(i).Control(:));
         %title(['velocity',num2str(i)]);
-        hold on       
+        hold on
     end
     txt2 = 'Control input $(m/s^2)$';
     lbl2 = 'control';
     ax2 = [0 60 -5 5];
-%     PrintFig(txt2,lbl2,ax2,1);
-%     
+    %     PrintFig(txt2,lbl2,ax2,1);
+    %
     %figure(3)
     %RearEndPosition(6,3,x,tx,TZeros,pathInfo);
     %figure
@@ -257,25 +261,25 @@ function PrintFig(title,file_label,AXIS,TICK)
 
 axis(AXIS)
 set(gca,...
-'Units','normalized',...
-'YTick',AXIS(3):TICK:AXIS(4),...
-'XTick',AXIS(1):10:AXIS(2),...
-'Position',[.15 .2 .75 .7],...
-'FontUnits','points',...
-'FontWeight','normal',...
-'FontSize',8,...
-'FontName','Times')
+    'Units','normalized',...
+    'YTick',AXIS(3):TICK:AXIS(4),...
+    'XTick',AXIS(1):10:AXIS(2),...
+    'Position',[.15 .2 .75 .7],...
+    'FontUnits','points',...
+    'FontWeight','normal',...
+    'FontSize',8,...
+    'FontName','Times')
 ylabel({title},...
-'FontUnits','points',...
-'interpreter','latex',...
-'FontSize',8,...
-'FontName','Times')
+    'FontUnits','points',...
+    'interpreter','latex',...
+    'FontSize',8,...
+    'FontName','Times')
 xlabel({'Time $(s)$'},...
-'FontUnits','points',...
-'interpreter','latex',...
-'FontWeight','normal',...
-'FontSize',8,...
-'FontName','Times')
+    'FontUnits','points',...
+    'interpreter','latex',...
+    'FontWeight','normal',...
+    'FontSize',8,...
+    'FontName','Times')
 box on
 grid on
 print(file_label,'-depsc2')
@@ -289,61 +293,61 @@ B = b(b~=0);
 B = B(B~=1);
 disp(B);
 if isempty(B)
-   error('Path does not have conflict or it has lateral collision')
-end 
+    error('Path does not have conflict or it has lateral collision')
+end
 for i = v
-IndexInitR = find(x(i).Zone(:)== B(1),1);
-IndexEndR = find(x(i).Zone(:)== B(end),1,'last');
-if IndexInitR > IndexEndR
-  error('This function only works if conflict zones of vehicle v1 and v2 are after each other');
-end
-IndexOrig = find(tx==TZeros(i),1);
-IndexInit = IndexOrig + IndexInitR - 1;
-IndexEnd = IndexOrig + IndexEndR - 1;
-[RelativePos,~,~,~] = mapGeometry(i,B(1),pathInfo);
-plot(tx(IndexInit:IndexEnd),x(i).Position(IndexInitR:IndexEndR)-RelativePos);
-hold on
-con = 0 ;
-g = [];
-for j = B
-con = con +1;
-InR = find(x(i).Zone(:)== j ,1,'last');
-PS = x(i).Position(InR)-RelativePos;
-g(end+1) = PS;
-g(end+1) = PS;
-disp([i,j,PS])
-line([0 50],[PS PS]);
-
-hold on
-end
-t = [0,50,50,0];
-g = [0,0,g];
-patch(t,g(1:4),'r','FaceAlpha',.2)
-patch(t,g(3:6),'g','FaceAlpha',.2)
-patch(t,g(5:8),'b','FaceAlpha',.2)
-
+    IndexInitR = find(x(i).Zone(:)== B(1),1);
+    IndexEndR = find(x(i).Zone(:)== B(end),1,'last');
+    if IndexInitR > IndexEndR
+        error('This function only works if conflict zones of vehicle v1 and v2 are after each other');
+    end
+    IndexOrig = find(tx==TZeros(i),1);
+    IndexInit = IndexOrig + IndexInitR - 1;
+    IndexEnd = IndexOrig + IndexEndR - 1;
+    [RelativePos,~,~,~] = mapGeometry(i,B(1),pathInfo);
+    plot(tx(IndexInit:IndexEnd),x(i).Position(IndexInitR:IndexEndR)-RelativePos);
+    hold on
+    con = 0 ;
+    g = [];
+    for j = B
+        con = con +1;
+        InR = find(x(i).Zone(:)== j ,1,'last');
+        PS = x(i).Position(InR)-RelativePos;
+        g(end+1) = PS;
+        g(end+1) = PS;
+        disp([i,j,PS])
+        line([0 50],[PS PS]);
+        
+        hold on
+    end
+    t = [0,50,50,0];
+    g = [0,0,g];
+    patch(t,g(1:4),'r','FaceAlpha',.2)
+    patch(t,g(3:6),'g','FaceAlpha',.2)
+    patch(t,g(5:8),'b','FaceAlpha',.2)
+    
 end
 
 %%need to be completed
 end
 function RearEndPositionZone(zone,x,tx,TZeros,pathInfo)
-%Checking the vehicle in the Zones 
+%Checking the vehicle in the Zones
 vehicle =[];
 for i=1:length(pathInfo)
-if  any(pathInfo(i,:) == zone)
-    vehicle(end+1) = i;
+    if  any(pathInfo(i,:) == zone)
+        vehicle(end+1) = i;
+    end
 end
-end 
 % check relative index for each vehicle when they enter the zone
 for i = vehicle
-IndexInitR = find(x(i).Zone(:)== zone,1);
-IndexEndR = find(x(i).Zone(:)== zone,1,'last');
-IndexOrig = find(tx==TZeros(i),1);
-IndexInit = IndexOrig + IndexInitR - 1;
-IndexEnd = IndexOrig + IndexEndR - 1;
-[RelativePos,~,~,~] = mapGeometry(i,zone,pathInfo);
-plot(tx(IndexInit:IndexEnd),x(i).Position(IndexInitR:IndexEndR)-RelativePos);
-hold on
+    IndexInitR = find(x(i).Zone(:)== zone,1);
+    IndexEndR = find(x(i).Zone(:)== zone,1,'last');
+    IndexOrig = find(tx==TZeros(i),1);
+    IndexInit = IndexOrig + IndexInitR - 1;
+    IndexEnd = IndexOrig + IndexEndR - 1;
+    [RelativePos,~,~,~] = mapGeometry(i,zone,pathInfo);
+    plot(tx(IndexInit:IndexEnd),x(i).Position(IndexInitR:IndexEndR)-RelativePos);
+    hold on
 end
 end
 function x = RESET(x,totalVehicles)
@@ -363,7 +367,7 @@ end
 
 
 %%
-%TODO : fix control value at the switching point 
+%TODO : fix control value at the switching point
 
 
 

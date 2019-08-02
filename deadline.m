@@ -11,11 +11,11 @@ global v_min
 
 pIntermediate = (vEnd^2-vStart^2+2*(u_min*pStart-u_max*pEnd))/(-2*(u_max-u_min));
 CHECK = vStart^2+2*u_min*(pIntermediate - pStart);
+vIntermediate = sqrt(vStart^2+2*u_min*(pIntermediate - pStart));
 
 
 
-if CHECK > 0
-    vIntermediate = sqrt(vStart^2+2*u_min*(pIntermediate - pStart));
+if CHECK > 0 && vIntermediate>v_min
     tIntermediate = (vIntermediate - vStart)/u_min;
     tf = tIntermediate + (vEnd - vIntermediate)/u_max;
     constrained = false;

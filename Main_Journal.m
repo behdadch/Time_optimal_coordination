@@ -15,22 +15,22 @@ global R
 global D
 global timeHeadway
 totalZones = 22; %Number of zones
-totalVehicles = 4; %Number of vehicles
+totalVehicles = 16; %Number of vehicles
 %TODO: Defining the value for road length and merge length
 roadLength = 200;
 mergeLength = 30;
-vOut(1:totalVehicles) = 30;
+vOut(1:totalVehicles) = 25;
 vMerge = 20;
 u_min = -3;
 u_max = 3;
 v_max = 40;
-v_min = 19.5;%TODO:Need to be set carefully
+v_min = 2;%TODO:Need to be set carefully
 
 timeHeadway = 1;
 conflict = zeros(totalVehicles,totalVehicles,totalZones);
 pathInfo = zeros(totalVehicles,totalZones);
-ANIMATION = false;
-PLOT = true;
+ANIMATION = true;
+PLOT = false;
 RANDOM = false;
 %temp = zeros(totalVehicles,1);
 T = 0;
@@ -48,8 +48,8 @@ if RANDOM
     TZeros = round(TZeros,2);
     TZeros = TZeros - TZeros(1);
 else
-    %TZeros = [0,1,1.5,1.7,1.65,2.5,3,3.2,3.15,4,4.5,4.7,4.65,5.5,6,6.2];
-    TZeros = [0,0,0,0];
+    TZeros = [0,1,1.5,1.7,1.65,2.5,3,3.2,3.15,4,4.5,4.7,4.65,5.5,6,6.2];
+    %TZeros = [0,0,0,0,1.2,1.5,1.6,6];
 end
 %TODO: Order of the vehicle index should be added
 
@@ -59,6 +59,19 @@ path(1) = 1;
 path(2) = 2;
 path(3) = 3;
 path(4) = 4;
+path(5) = 1;
+path(6) = 2;
+path(7) = 3;
+path(8) = 4;
+path(9) = 1;
+path(10) = 2;
+path(11) = 3;
+path(12) = 4;
+path(13) = 1;
+path(14) = 2;
+path(15) = 3;
+path(16) = 4;
+
 
 %Defining Path
 pathInfo(1,1:4) = [22,5,7,17];  %Path 1
@@ -114,9 +127,9 @@ RESTART = false;
 solved = nan;
 while dt < 3000
     dt = dt+1;
-    if RESTART==true
-        dt=1;
-        tx =[0];
+    if RESTART == true
+        dt = 1;
+        tx = [0];
         RESTART = false;
     end
     
@@ -134,6 +147,8 @@ while dt < 3000
                 xx(i) = 2*roadLength+5*mergeLength/4;
                 yy(i) = 2*roadLength+mergeLength- x(i).Position(end);
                 hh(i) = plot(xx(i),yy(i),'.m');
+                HD(i) = 2 + x(i).Velocity(end)*0.5;
+                c(i) = circle(xx(i),yy(i),HD(i));
                 hold on;
             elseif PathNumber == 2
                 % path #2
@@ -145,12 +160,16 @@ while dt < 3000
                     yy(i) = roadLength+mergeLength/4;
                 end
                 hh(i) = plot(xx(i),yy(i),'.k');
+                HD(i) = 2 + x(i).Velocity(end)*0.5;
+                c(i) = circle(xx(i),yy(i),HD(i));
                 hold on;
             elseif PathNumber == 3
                 % path #3
                 xx(i) = x(i).Position(end);
                 yy(i) = roadLength+mergeLength/4;
                 hh(i) = plot(xx(i),yy(i),'.r');
+                HD(i) = 2 + x(i).Velocity(end)*0.5;
+                c(i) = circle(xx(i),yy(i),HD(i));
                 hold on
             elseif PathNumber == 4
                 if x(i).Position(end)< roadLength+3*mergeLength/4
@@ -164,6 +183,8 @@ while dt < 3000
                     yy(i) = -x(i).Position(end)+(3*roadLength+3*mergeLength);
                 end
                 hh(i) = plot(xx(i),yy(i),'.b');
+                HD(i) = 2 + x(i).Velocity(end)*0.5;
+                c(i) = circle(xx(i),yy(i),HD(i));
                 hold on
             end
         end
@@ -179,11 +200,11 @@ while dt < 3000
         %time is the current time
         %if constraint is activated then
         x(i).Zone(end+1) = m;
-        
         [x(i).Position(end+1),x(i).Velocity(end+1),x(i).Control(end+1),solved] = controller(i,j,type,pathInfo,time,path,solved);
         %Check if control constraints becomes violated
         if length(x(i).Control)~= 0 && count<1
             if x(i).Control(end)< u_min
+                disp('acceleration has violated the umin');
                 x(i).Control(end)
                 count = count +1;
                 ActivZone = x(i).Zone(end);
@@ -207,6 +228,9 @@ while dt < 3000
         delete(htext)
         for i=1:totalVehicles
             delete(hh(i))
+            if exist('c')  
+                delete(c(i))
+            end
         end
         axis equal
         grid on
@@ -214,7 +238,14 @@ while dt < 3000
     end
     
 end
-%%
+%% Post- Processing 
+
+%%Animation %TODO
+
+
+
+
+%%Plot 
 if PLOT
     width=4;%inch
     height=2;

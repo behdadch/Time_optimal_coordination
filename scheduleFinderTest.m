@@ -7,11 +7,10 @@ for i=1:totalVehicles
     j=1;
     ConflictInfo.order = [];
     ConflictInfo.schedule = [];
-    while j <= nnz(pathInfo(PathNumber,:))        
+    while j <= nnz(pathInfo(PathNumber,:))
         k = 1;
         if j == 1
             T(i,j) = TZeros(i);
-            j = j+1;
         else
             m = pathInfo(PathNumber,j-1);
             n = pathInfo(PathNumber,j);
@@ -31,7 +30,7 @@ for i=1:totalVehicles
             schedule = ConflictInfo.schedule;
             Sol = MILPFinal(T(i,1),nnz(pathInfo(PathNumber,:)),R(i,:),D(i,:),order,schedule,timeHeadway);
             T(i,2:nnz(pathInfo(PathNumber,:))+1)=Sol;
-            
+            T(i,:)
         end
         j = j+1;
         

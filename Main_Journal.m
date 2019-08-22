@@ -48,8 +48,10 @@ if RANDOM
     TZeros = round(TZeros,2);
     TZeros = TZeros - TZeros(1);
 else
-    TZeros = [0,1,1.5,1.7,1.65,2.5,3,3.2,3.15,4,4.5,4.7,4.65,5.5,6,6.2];
-    %TZeros = [0,0,0,0,1.2,1.5,1.6,6];
+   TZeros = [0,1,1.5,1.7,1.65,2.5,3,3.2,3.15,4,4.5,4.7,4.65,5.5,6,6.2];
+    %TZeros = [0,1.47000000000000,1.60000000000000,2.04000000000000,2.96000000000000,4.49000000000000,7.91000000000000,8.76000000000000,10.6800000000000,15.4100000000000,16.2600000000000,16.4300000000000,17.2800000000000,18.1800000000000,19.1500000000000,19.8300000000000];
+    %TZeros = [0,0,0,0,2,2,2,2,3,3,3,3,5,5,5,5,6,6,6,6,8,8,8,8];
+    %TZeros =[0,0.450000000000000,0.980000000000000,1.99000000000000,3.12000000000000,5.27000000000000,5.77000000000000,10.3600000000000,14.0200000000000,14.1800000000000,16.0600000000000,16.8900000000000,16.9300000000000,17.9300000000000,18.2700000000000,18.3900000000000,19.3200000000000,21.3800000000000,22.5600000000000,24.8400000000000,25.3700000000000,26.2100000000000,27.3400000000000,28.9600000000000];
 end
 %TODO: Order of the vehicle index should be added
 
@@ -71,6 +73,14 @@ path(13) = 1;
 path(14) = 2;
 path(15) = 3;
 path(16) = 4;
+path(17) = 1;
+path(18) = 2;
+path(19) = 3;
+path(20) = 4;
+path(21) = 1;
+path(22) = 2;
+path(23) = 3;
+path(24) = 4;
 
 
 %Defining Path
@@ -114,18 +124,19 @@ end
 %TODO: Starting point for the time loop
 %%
 finish = 0;
-tx=[0];
+tx = [0];
+
 if ANIMATION
     mapBuilder();
     txt2 = 'Time:';
-    timetext=text(1000,720,txt2);
+    timetext=text(500,400,txt2);
 end
-
+%%
 count = 0;
 dt = 0;
 RESTART = false;
 solved = nan;
-while dt < 3000
+while dt < 350
     dt = dt+1;
     if RESTART == true
         dt = 1;
@@ -147,8 +158,8 @@ while dt < 3000
                 xx(i) = 2*roadLength+5*mergeLength/4;
                 yy(i) = 2*roadLength+mergeLength- x(i).Position(end);
                 hh(i) = plot(xx(i),yy(i),'.m');
-                HD(i) = 2 + x(i).Velocity(end)*0.5;
-                c(i) = circle(xx(i),yy(i),HD(i));
+                HD(i) = 1 + x(i).Velocity(end)*0.5;
+                c(i) = circle(xx(i),yy(i),10);
                 hold on;
             elseif PathNumber == 2
                 % path #2
@@ -160,16 +171,16 @@ while dt < 3000
                     yy(i) = roadLength+mergeLength/4;
                 end
                 hh(i) = plot(xx(i),yy(i),'.k');
-                HD(i) = 2 + x(i).Velocity(end)*0.5;
-                c(i) = circle(xx(i),yy(i),HD(i));
+                HD(i) = 1 + x(i).Velocity(end)*0.5;
+                c(i) = circle(xx(i),yy(i),10);
                 hold on;
             elseif PathNumber == 3
                 % path #3
                 xx(i) = x(i).Position(end);
                 yy(i) = roadLength+mergeLength/4;
                 hh(i) = plot(xx(i),yy(i),'.r');
-                HD(i) = 2 + x(i).Velocity(end)*0.5;
-                c(i) = circle(xx(i),yy(i),HD(i));
+                HD(i) = 1 + x(i).Velocity(end)*0.5;
+                c(i) = circle(xx(i),yy(i),10);
                 hold on
             elseif PathNumber == 4
                 if x(i).Position(end)< roadLength+3*mergeLength/4
@@ -183,8 +194,8 @@ while dt < 3000
                     yy(i) = -x(i).Position(end)+(3*roadLength+3*mergeLength);
                 end
                 hh(i) = plot(xx(i),yy(i),'.b');
-                HD(i) = 2 + x(i).Velocity(end)*0.5;
-                c(i) = circle(xx(i),yy(i),HD(i));
+                HD(i) = 1 + x(i).Velocity(end)*0.5;
+                c(i) = circle(xx(i),yy(i),10);
                 hold on
             end
         end
@@ -222,9 +233,9 @@ while dt < 3000
     end
     if ANIMATION
         txt = num2str(time);
-        htext=text(1100,720,txt);
+        htext=text(550,400,txt);
         M(dt) = getframe(gcf);
-        pause(0.01);
+        pause(0.001);
         delete(htext)
         for i=1:totalVehicles
             delete(hh(i))
@@ -438,9 +449,10 @@ end
 %maybe using structure would be a good idea
 %%
 
-% newVid = VideoWriter('simulation', 'MPEG-4'); % New
-% newVid.Quality = 100;
-% open(newVid);
-% writeVideo(v,M);
-%open(v);
+%  newVid = VideoWriter('r=10Sim2', 'MPEG-4'); % New
+%  newVid.Quality = 100;
+%  open(newVid);
+%  writeVideo(newVid,M);
+%  close(newVid)
+
 %Functions

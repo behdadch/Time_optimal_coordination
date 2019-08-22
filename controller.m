@@ -99,12 +99,12 @@ elseif type(i,j) == "Umin"
     
     if solved == 0
         %const = [T(i,j),T(i,j+1),pStart,pEnd,vStart,vEnd,u_min];   
-        options=optimset('disp','iter','LargeScale','off','TolFun',.001);
+        options=optimset('disp','iter','LargeScale','on','TolFun',0.001);
         fun = @(x)MinDecActive(x,T(i,j),T(i,j+1),pStart,pEnd,vStart,vEnd,u_min);
-        x0 = zeros(1,7)+2;
-        sol = fsolve(fun,x0,options);
+        x0 = zeros(1,7)
+        sol = fsolve(fun,x0,options)
         solved = sol(1:end);
-        if sol(7)<0
+        if sol(7)<0.001
           x0 = zeros(1,7)+25;
           sol = fsolve(fun,x0);
           solved = sol(1:end);

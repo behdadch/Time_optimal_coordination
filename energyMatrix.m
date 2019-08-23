@@ -11,7 +11,11 @@ function[a,b,c,d]= energyMatrix(t,tm,p,pm,v,vm)
     % pm: final position, start point of the merging zone
     % vm: final speed (assuming same speed to the entry speed of control
     % zone)
-
+%%Author: Behdad Chalaki
+%Advisor: Andreas Malikopoulos
+%Phd Student at University of Delaware
+%Information and decision Science Lab
+%For more information, send an eamil to bchalaki@udel.edu
     A =[t^3/6 t^2/2 t 1; t^2/2 t 1 0; tm^3/6 tm^2/2 tm 1; tm^2/2 tm 1 0];
     Y =[p; v; pm; vm];
 

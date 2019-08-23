@@ -3,6 +3,11 @@ function [pStart,pEnd,vStart,vEnd] = mapGeometry(vehicleIndex,zoneNumber,pathInf
 %"vehicleIndex"
 %zoneNumber should be the topological number of zone
 %pathInfo should also be passed to this function
+%%Author: Behdad Chalaki
+%Advisor: Andreas Malikopoulos
+%Phd Student at University of Delaware
+%Information and decision Science Lab
+%For more information, send an eamil to bchalaki@udel.edu
 global roadLength
 global mergeLength
 global vOut 

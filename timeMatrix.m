@@ -1,4 +1,9 @@
 function [b,c]= timeMatrix(pStart,pEnd,vStart,vEnd,tEnter,tExit,Acc)
+%%Author: Behdad Chalaki
+%Advisor: Andreas Malikopoulos
+%Phd Student at University of Delaware
+%Information and decision Science Lab
+%For more information, send an eamil to bchalaki@udel.edu
 global u_max
 global u_min
 

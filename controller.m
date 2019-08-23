@@ -1,4 +1,9 @@
 function [pos,vel,control,zoneNumber]=controller(i,j,type,pathInfo,x,time)
+%%Author: Behdad Chalaki
+%Advisor: Andreas Malikopoulos
+%Phd Student at University of Delaware
+%Information and decision Science Lab
+%For more information, send an eamil to bchalaki@udel.edu
 global T
 global vMerge
 global u_min

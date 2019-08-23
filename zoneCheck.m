@@ -1,30 +1,31 @@
-function [zone,index,finish]=zoneCheck(i,position,pathInfo)
+function [zone,index,finish]=zoneCheck(vehicleIndex,time,pathInfo)
+%This function will find zone that CAV is travelling through from the
+%schedule of the CAV
+%%Author: Behdad Chalaki
+%Advisor: Andreas Malikopoulos
+%Phd Student at University of Delaware
+%Information and decision Science Lab
+%For more information, send an eamil to bchalaki@udel.edu
 finish = 0;
-global roadLength
-global mergeLength
-L = roadLength;
-S = mergeLength;
-p = position;
-if (rem(i,4) == 1)
-    distance = [0,L,L+S,2*L+S];
-elseif (rem(i,4) == 2)
-    distance = [0,L,L+S/2,2*L+S/2,2*L+(3*S)/2,3*L+(3*S)/2];
-elseif (rem(i,4) == 3)
-    distance = [0,L,L+S,2*L+S,2*L+2*S,3*L+2*S];
-elseif (rem(i,4) == 0)
-    distance = [0,L,L+(3*S)/2,2*L+(3*S)/2,2*L+3*S,3*L+3*S];
-end
-if max(distance)< p
+global T
+
+x = vehicleIndex;
+j = find(T(x,:) == max(T(x,:)))-1;
+
+if T(x,j+1) < time %CAV exited the control zone
     zone = nan;
     index = nan; 
     finish = 1;
     return
+elseif T(x,j)<= time %CAV is at the last zone
+index = j;    
+else
+index = find(T(x,:)== min(T(x,T(x,:)>time)))-1;
 end
-index = find(distance == min(distance(distance>p)))-1;
-%index = max(index,1);
+
 try
-zone = pathInfo(i,index);
+zone = pathInfo(x,index);
 catch
-    disp(['i and index are ',num2str(i),' and ',num2str(index)]); 
+    disp(['vehicleIndex and zones index are ',num2str(vehicleIndex),' and ',num2str(index)]); 
 end
 end

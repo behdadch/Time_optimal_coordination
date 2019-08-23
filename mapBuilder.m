@@ -1,4 +1,9 @@
 function mapBuilder()
+%%Author: Behdad Chalaki
+%Advisor: Andreas Malikopoulos
+%Phd Student at University of Delaware
+%Information and decision Science Lab
+%For more information, send an eamil to bchalaki@udel.edu
 global roadLength
 global mergeLength
 

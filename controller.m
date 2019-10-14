@@ -96,19 +96,17 @@ elseif type(i,j) == "Latest-Time"
         error(msg);
     end
 elseif type(i,j) == "Umin"
-    
     if solved == 0
-        %const = [T(i,j),T(i,j+1),pStart,pEnd,vStart,vEnd,u_min];   
+        %const = [T(i,j),T(i,j+1),pStart,pEnd,vStart,vEnd,u_min];
         options=optimset('disp','iter','LargeScale','on','TolFun',0.001);
         fun = @(x)MinDecActive(x,T(i,j),T(i,j+1),pStart,pEnd,vStart,vEnd,u_min);
-        x0 = zeros(1,7)
-        sol = fsolve(fun,x0,options)
+        x0 = zeros(1,7)+T(i,j)*0.5
+        [sol,fval,exitflag,output]  = fsolve(fun,x0,options)
         solved = sol(1:end);
-        if sol(7)<0.001
-          x0 = zeros(1,7)+25;
-          sol = fsolve(fun,x0);
-          solved = sol(1:end);
-        end 
+        if sol(7)>T(i,j+1) || exitflag <=0
+            msg = 'Error occurred.';
+            error(msg)
+        end
     else
         sol = solved;
     end
@@ -119,15 +117,94 @@ elseif type(i,j) == "Umin"
     f = sol(5);
     g = sol(6);
     t1= sol(7);
-   
-%     [a,b,c,d,f,g,t1]=sol
-    if T(i,j)<= time && time <= T(i,j) + t1
-        vel = 0.5*a*(time)^2+b*(time)+c;       
-        pos = (1/6)*a*(time)^3+0.5*b*(time)^2+c*(time)+d;        
+    
+    %  Unconstrained--> u = Umin
+    
+    if T(i,j)<= time && time <= t1
+        vel = 0.5*a*(time)^2+b*(time)+c;
+        pos = (1/6)*a*(time)^3+0.5*b*(time)^2+c*(time)+d;
         control = a*(time)+b;
     else
         control = u_min;
         vel = control*time + f;
         pos = 0.5*control*time^2 + f*time + g;
-    end   
+    end
+elseif type(i,j) == "Umax"
+    if solved == 0
+        %const = [T(i,j),T(i,j+1),pStart,pEnd,vStart,vEnd,u_min];
+        options=optimset('disp','iter','LargeScale','on','TolFun',0.001);
+        fun = @(x)ControlActive(x,T(i,j),T(i,j+1),pStart,pEnd,vStart,vEnd,u_max);
+        x0 = zeros(1,7)+25
+        [sol,fval,exitflag,output]  = fsolve(fun,x0,options)
+        solved = sol(1:end);
+        if sol(7)>T(i,j+1) || exitflag <=0
+            msg = 'Error occurred.';
+            error(msg)
+        end
+    else
+        sol = solved;
+    end
+    a = sol(1);
+    b = sol(2);
+    c = sol(3);
+    d = sol(4);
+    f = sol(5);
+    g = sol(6);
+    t1= sol(7);
+    
+    %  Unconstrained--> u = Umax
+    
+    if T(i,j)<= time && time <= t1
+        control = u_max;
+        vel = control*time + f;
+        pos = 0.5*control*time^2 + f*time + g;
+        
+    else
+        vel = 0.5*a*(time)^2+b*(time)+c;
+        pos = (1/6)*a*(time)^3+0.5*b*(time)^2+c*(time)+d;
+        control = a*(time)+b;
+    end
+    elseif type(i,j) == "UmaxUnconsUmin"
+    if solved == 0
+        %const = [T(i,j),T(i,j+1),pStart,pEnd,vStart,vEnd,u_min];
+        options=optimset('disp','iter','LargeScale','on','TolFun',0.001);
+        fun = @(x)UmaxUnconUmin(x,T(i,j),T(i,j+1),pStart,pEnd,vStart,vEnd,u_max,u_min);
+        x0 = zeros(1,10)+T(i,j);
+        [sol,fval,exitflag,output]  = fsolve(fun,x0,options)
+        solved = sol(1:end);
+        if exitflag <=0
+            msg = 'Error occurred.';
+            error(msg)
+        end
+    else
+        sol = solved;
+    end
+    e  = sol(1);
+    f  = sol(2);
+    t1 = sol(3); 
+    a  = sol(4);
+    b  = sol(5); 
+    c  = sol(6); 
+    d  = sol(7); 
+    t2 = sol(8);
+    g  = sol(9); 
+    h  = sol(10);
+    
+    %  u = Umax--> Unconstrained--> u = Umin
+    
+    if T(i,j)<= time && time <= t1
+        control = u_max;
+        vel = control*time + e;
+        pos = 0.5*control*time^2 + e*time + f;
+        
+    elseif t1<= time && time <= t2
+        vel = 0.5*a*(time)^2+b*(time)+c;
+        pos = (1/6)*a*(time)^3+0.5*b*(time)^2+c*(time)+d;
+        control = a*(time)+b;
+    else
+        control = u_min;
+        vel = control*time + g;
+        pos = 0.5*control*time^2 + g*time + h;
+    end
+        
 end

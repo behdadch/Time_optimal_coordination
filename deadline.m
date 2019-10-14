@@ -15,7 +15,7 @@ vIntermediate = sqrt(vStart^2+2*u_min*(pIntermediate - pStart));
 
 
 
-if CHECK > 0 && vIntermediate>v_min
+if CHECK > 0 && vIntermediate >v_min
     tIntermediate = (vIntermediate - vStart)/u_min;
     tf = tIntermediate + (vEnd - vIntermediate)/u_max;
     constrained = false;

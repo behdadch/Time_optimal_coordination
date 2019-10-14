@@ -1,4 +1,3 @@
-close all
 clear
 clc
 global u_min
@@ -14,24 +13,30 @@ global T
 global R
 global D
 global timeHeadway
+
 totalZones = 22; %Number of zones
 totalVehicles = 16; %Number of vehicles
 %TODO: Defining the value for road length and merge length
-roadLength = 200;
+roadLength = 300;
 mergeLength = 30;
 vOut(1:totalVehicles) = 25;
 vMerge = 20;
-u_min = -3;
-u_max = 3;
-v_max = 40;
-v_min = 2;%TODO:Need to be set carefully
-
+u_min = -1;
+u_max = 1;
+v_max = 35;
+v_min = 5;
 timeHeadway = 1;
+gamma = 5;
+phi = 0.2;
+%%
+0.5*u_min*timeHeadway^2+vMerge*(timeHeadway-phi)-gamma
+%%
 conflict = zeros(totalVehicles,totalVehicles,totalZones);
 pathInfo = zeros(totalVehicles,totalZones);
 ANIMATION = true;
 PLOT = false;
 RANDOM = false;
+CONSTRAINT = true;
 %temp = zeros(totalVehicles,1);
 T = 0;
 for i = 1:totalVehicles
@@ -48,10 +53,10 @@ if RANDOM
     TZeros = round(TZeros,2);
     TZeros = TZeros - TZeros(1);
 else
-   TZeros = [0,1,1.5,1.7,1.65,2.5,3,3.2,3.15,4,4.5,4.7,4.65,5.5,6,6.2];
-    %TZeros = [0,1.47000000000000,1.60000000000000,2.04000000000000,2.96000000000000,4.49000000000000,7.91000000000000,8.76000000000000,10.6800000000000,15.4100000000000,16.2600000000000,16.4300000000000,17.2800000000000,18.1800000000000,19.1500000000000,19.8300000000000];
-    %TZeros = [0,0,0,0,2,2,2,2,3,3,3,3,5,5,5,5,6,6,6,6,8,8,8,8];
-    %TZeros =[0,0.450000000000000,0.980000000000000,1.99000000000000,3.12000000000000,5.27000000000000,5.77000000000000,10.3600000000000,14.0200000000000,14.1800000000000,16.0600000000000,16.8900000000000,16.9300000000000,17.9300000000000,18.2700000000000,18.3900000000000,19.3200000000000,21.3800000000000,22.5600000000000,24.8400000000000,25.3700000000000,26.2100000000000,27.3400000000000,28.9600000000000];
+%%
+TZeros = [0,2.05,2.16,4.31,5.75,7.4,9.32,10.89,11.33,11.36,12.12,13.01,13.27,13.89,13.98,16.97];
+%TZeros = [0,1,1.5,1.7,1.65,2.5,3,3.2,3.15,4,4.5,4.7,4.65,5.5,6,6.2];
+
 end
 %TODO: Order of the vehicle index should be added
 
@@ -73,14 +78,14 @@ path(13) = 1;
 path(14) = 2;
 path(15) = 3;
 path(16) = 4;
-path(17) = 1;
-path(18) = 2;
-path(19) = 3;
-path(20) = 4;
-path(21) = 1;
-path(22) = 2;
-path(23) = 3;
-path(24) = 4;
+% path(17) = 1;
+% path(18) = 2;
+% path(19) = 3;
+% path(20) = 4;
+% path(21) = 1;
+% path(22) = 2;
+% path(23) = 3;
+% path(24) = 4;
 
 
 %Defining Path
@@ -136,7 +141,7 @@ count = 0;
 dt = 0;
 RESTART = false;
 solved = nan;
-while dt < 350
+while dt < 3500
     dt = dt+1;
     if RESTART == true
         dt = 1;
@@ -158,8 +163,8 @@ while dt < 350
                 xx(i) = 2*roadLength+5*mergeLength/4;
                 yy(i) = 2*roadLength+mergeLength- x(i).Position(end);
                 hh(i) = plot(xx(i),yy(i),'.m');
-                HD(i) = 1 + x(i).Velocity(end)*0.5;
-                c(i) = circle(xx(i),yy(i),10);
+                HD(i) = gamma + x(i).Velocity(end)*phi;
+                c(i) = circle(xx(i),yy(i),HD(i));
                 hold on;
             elseif PathNumber == 2
                 % path #2
@@ -171,16 +176,16 @@ while dt < 350
                     yy(i) = roadLength+mergeLength/4;
                 end
                 hh(i) = plot(xx(i),yy(i),'.k');
-                HD(i) = 1 + x(i).Velocity(end)*0.5;
-                c(i) = circle(xx(i),yy(i),10);
+                HD(i) = gamma + x(i).Velocity(end)*phi;
+                c(i) = circle(xx(i),yy(i),HD(i));
                 hold on;
             elseif PathNumber == 3
                 % path #3
                 xx(i) = x(i).Position(end);
                 yy(i) = roadLength+mergeLength/4;
                 hh(i) = plot(xx(i),yy(i),'.r');
-                HD(i) = 1 + x(i).Velocity(end)*0.5;
-                c(i) = circle(xx(i),yy(i),10);
+                HD(i) = gamma + x(i).Velocity(end)*phi;
+                c(i) = circle(xx(i),yy(i),HD(i));
                 hold on
             elseif PathNumber == 4
                 if x(i).Position(end)< roadLength+3*mergeLength/4
@@ -194,8 +199,8 @@ while dt < 350
                     yy(i) = -x(i).Position(end)+(3*roadLength+3*mergeLength);
                 end
                 hh(i) = plot(xx(i),yy(i),'.b');
-                HD(i) = 1 + x(i).Velocity(end)*0.5;
-                c(i) = circle(xx(i),yy(i),10);
+                HD(i) = gamma + x(i).Velocity(end)*phi;
+                c(i) = circle(xx(i),yy(i),HD(i));
                 hold on
             end
         end
@@ -213,8 +218,8 @@ while dt < 350
         x(i).Zone(end+1) = m;
         [x(i).Position(end+1),x(i).Velocity(end+1),x(i).Control(end+1),solved] = controller(i,j,type,pathInfo,time,path,solved);
         %Check if control constraints becomes violated
-        if length(x(i).Control)~= 0 && count<1
-            if x(i).Control(end)< u_min
+        if length(x(i).Control)~= 0 && count<1 && CONSTRAINT
+            if x(i).Control(end)< u_min -0.01
                 disp('acceleration has violated the umin');
                 x(i).Control(end)
                 count = count +1;
@@ -227,7 +232,49 @@ while dt < 350
                 solved = 0;
                 break
             end
+            if x(i).Control(end)> u_max + 0.01
+                disp('acceleration has violated the umax');
+                x(i).Control(end)
+                count = count +1;
+                ActivZone = x(i).Zone(end);
+                PN = path(i);
+                zoneNumber = find(pathInfo(PN,:) == ActivZone);
+                type(i,zoneNumber) = "Umax";
+                x = RESET(x,totalVehicles);
+                RESTART = true;
+                solved = 0;
+                break
+            end
         end
+        if length(x(i).Control)~= 0 && count<2 && CONSTRAINT
+            if x(i).Control(end)< u_min -0.01
+                disp('acceleration has violated the umin');
+                x(i).Control(end)
+                count = count +1;
+                ActivZone = x(i).Zone(end);
+                PN = path(i);
+                zoneNumber = find(pathInfo(PN,:) == ActivZone);
+                type(i,zoneNumber) = "UminUnconsUmax";
+                x = RESET(x,totalVehicles);
+                RESTART = true;
+                solved = 0;
+                break
+            end
+            if x(i).Control(end)> u_max + 0.01
+                disp('acceleration has violated the umax');
+                x(i).Control(end)
+                count = count +1;
+                ActivZone = x(i).Zone(end);
+                PN = path(i);
+                zoneNumber = find(pathInfo(PN,:) == ActivZone);
+                type(i,zoneNumber) = "UmaxUnconsUmin";
+                x = RESET(x,totalVehicles);
+                RESTART = true;
+                solved = 0;
+                break
+            end
+        end
+        
         
         %Check if state constraint becomes violated
     end
@@ -264,7 +311,7 @@ if PLOT
         'Position',[0 0 width height],...
         'PaperPositionMode','auto');
     figure(1);
-    for i=1:totalVehicles
+    for i=3%1:totalVehicles
         plot(tx(find(tx==TZeros(i)):(length(x(i).Velocity)+find(tx==TZeros(i))-1)),x(i).Velocity(:));
         %title(['velocity',num2str(i)]);
         hold on
@@ -275,8 +322,15 @@ if PLOT
     %   PrintFig(txt1,lbl1,ax1,5);
     
     figure(2)
-    for i=1:totalVehicles
+    for i=3%1:totalVehicles
         plot(tx(find(tx==TZeros(i)):(length(x(i).Control)+find(tx==TZeros(i))-1)),x(i).Control(:));
+        %title(['velocity',num2str(i)]);
+        hold on
+    end
+    
+        figure(3)
+    for i=3%1:totalVehicles
+        plot(tx(find(tx==TZeros(i)):(length(x(i).Position)+find(tx==TZeros(i))-1)),x(i).Position(:));
         %title(['velocity',num2str(i)]);
         hold on
     end

@@ -1,9 +1,7 @@
 function F = UmaxUnconUmin(x,t0,tm,p0,pm,v0,vm,U1,U2)
   %Umax (e,f) t1==> Uncons.(a,b,c,d) t2==> Umin(g,h)
     % e=x1,f=x2, t1=x3    a=x4 b=x5 c=x6 d=x7   t2=x8 g=x9  h=x10
-    
-    
-    
+
 F(1) = U1*t0+x(1)-v0;
 F(2) = 0.5*U1*t0^2+t0*x(1)+x(2)-p0;
 

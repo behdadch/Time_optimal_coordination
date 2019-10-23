@@ -45,7 +45,7 @@ pathInfo = zeros(totalVehicles,totalZones);
 ANIMATION = false;
 %PostProcessing
 ANIMATIONPP = false;
-PLOT = true;
+PLOT = false;
 RANDOM = false;
 CONSTRAINT = true;
 %temp = zeros(totalVehicles,1);
@@ -546,6 +546,8 @@ end
 end
 
 
+
+%%
 
 
 

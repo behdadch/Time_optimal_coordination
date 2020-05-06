@@ -1,0 +1,390 @@
+% This LaTeX was auto-generated from MATLAB code.
+% To make changes, update the MATLAB code and export to LaTeX again.
+
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{epstopdf}
+\usepackage{matlab}
+
+\sloppy
+\epstopdfsetup{outdir=./}
+\graphicspath{ {./SystemSolverRearEndGeneral_images/} }
+
+\begin{document}
+
+\begin{matlabcode}
+clc
+clear
+syms p_0 p_f v_0 v_f t_0 t_f t
+syms a_k b_k c_k d_k phi gamma
+syms a_i b_i c_i d_i e_i f_i g_i h_i m_i n_i t_1 t_2 C1 C2 C3 C4 P
+%CAV k Trajectoy Case1: 
+assume(t > 0)
+vk(t) = (1/2)*a_k*t^2+b_k*t+c_k
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+vk(t) = 
+    $\displaystyle \frac{a_k  t^2 }{2}+b_k  t+c_k $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+pk(t) =  (1/6)*a_k*t^3+(1/2)*b_k*t^2+c_k*t+d_k
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+pk(t) = 
+    $\displaystyle \frac{a_k  t^3 }{6}+\frac{b_k  t^2 }{2}+c_k  t+d_k $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+
+
+%first Arc
+p1(t) = (1/6)*a_i*t^3+(1/2)*b_i*t^2+c_i*t+d_i
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+p1(t) = 
+    $\displaystyle \frac{a_i  t^3 }{6}+\frac{b_i  t^2 }{2}+c_i  t+d_i $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+v1(t) = (1/2)*a_i*t^2+b_i*t+c_i
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+v1(t) = 
+    $\displaystyle \frac{a_i  t^2 }{2}+b_i  t+c_i $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+u1(t) = a_i*t+b_i
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+u1(t) = 
+    $\displaystyle b_i +a_i  t$
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+lambdaP1(t) = a_i
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+lambdaP1(t) = 
+    $\displaystyle a_i $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+lambdaV1(t) = -u1(t)
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+lambdaV1(t) = 
+    $\displaystyle -b_i -a_i  t$
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+H1(t) = simplify((1/2)*u1(t)^2 + lambdaP1(t)*v1(t) + lambdaV1(t)*u1(t))
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+H1(t) = 
+    $\displaystyle a_i  c_i -\frac{{b_i }^2 }{2}$
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+
+%Second Arc
+p2(t) = (1/6)*a_k*t^3+(1/2)*b_k*t^2-(1/2)*a_k*phi*t^2+C1*phi^2*exp(-t/phi)+e_i*t+f_i
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+p2(t) = 
+    $\displaystyle f_i +e_i  t+\frac{a_k  t^3 }{6}+\frac{b_k  t^2 }{2}-\frac{a_k  \varphi  t^2 }{2}+C_1  \varphi^2  e^{-\frac{t}{\varphi }} $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+v2(t) = (1/2)*a_k*t^2+b_k*t-a_k*phi*t-C1*phi*exp(-t/phi)+e_i
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+v2(t) = 
+    $\displaystyle e_i +b_k  t+\frac{a_k  t^2 }{2}-C_1  \varphi  e^{-\frac{t}{\varphi }} -a_k  \varphi  t$
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+u2(t) = a_k*t+b_k-a_k*phi+C1*exp(-t/phi)
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+u2(t) = 
+    $\displaystyle b_k -a_k  \varphi +a_k  t+C_1  e^{-\frac{t}{\varphi }} $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+lambdaP2(t) = C2
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+lambdaP2(t) = 
+    $\displaystyle C_2 $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+lambdaV2(t) = C4 - a_k*t - (C1/2)*exp(-t/phi)-C3*phi*exp(t/phi)
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+lambdaV2(t) = 
+    $\displaystyle C_4 -a_k  t-\frac{C_1  e^{-\frac{t}{\varphi }} }{2}-C_3  \varphi  e^{t/\varphi } $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+muS(t) = a_k-C2-(C1/(2*phi))*exp(-t/phi)+C3*exp(t/phi)
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+muS(t) = 
+    $\displaystyle a_k -C_2 +C_3  e^{t/\varphi } -\frac{C_1  e^{-\frac{t}{\varphi }} }{2 \varphi }$
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+H2(t) = (1/2)*u2(t)^2 + lambdaP2(t)*v2(t) + lambdaV2(t)*u2(t) %+muS*(v2-vk+phi*u2)
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+H2(t) = 
+    $\displaystyle \begin{array}{l}
+\frac{{\sigma_1 }^2 }{2}-\sigma_1  {\left(a_k  t-C_4 +\frac{C_1  e^{-\frac{t}{\varphi }} }{2}+C_3  \varphi  e^{t/\varphi } \right)}+C_2  {\left(e_i +b_k  t+\frac{a_k  t^2 }{2}-C_1  \varphi  e^{-\frac{t}{\varphi }} -a_k  \varphi  t\right)}\\
+\mathrm{}\\
+\textrm{where}\\
+\mathrm{}\\
+\;\;\sigma_1 =b_k -a_k  \varphi +a_k  t+C_1  e^{-\frac{t}{\varphi }} 
+\end{array}$
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+Hamil = expand(H2(t))
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+Hamil = 
+    $\displaystyle C_4  b_k +C_2  e_i +\frac{{b_k }^2 }{2}+\frac{{a_k }^2  \varphi^2 }{2}-\frac{{a_k }^2  t^2 }{2}+\frac{C_1  b_k  e^{-\frac{t}{\varphi }} }{2}-C_1  C_3  \varphi -C_4  a_k  \varphi +C_4  a_k  t+C_2  b_k  t-a_k  b_k  \varphi +\frac{C_2  a_k  t^2 }{2}+C_1  C_4  e^{-\frac{t}{\varphi }} -C_1  C_2  \varphi  e^{-\frac{t}{\varphi }} -\frac{C_1  a_k  \varphi  e^{-\frac{t}{\varphi }} }{2}-C_3  b_k  \varphi  e^{t/\varphi } -\frac{C_1  a_k  t e^{-\frac{t}{\varphi }} }{2}+C_3  a_k  \varphi^2  e^{t/\varphi } -C_2  a_k  \varphi  t-C_3  a_k  \varphi  t e^{t/\varphi } $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+diff(Hamil,t)
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+ans = 
+    $\displaystyle C_4  a_k +C_2  b_k -{a_k }^2  t-C_3  b_k  e^{t/\varphi } -C_2  a_k  \varphi +C_2  a_k  t+C_1  C_2  e^{-\frac{t}{\varphi }} -C_3  a_k  t e^{t/\varphi } -\frac{C_1  C_4  e^{-\frac{t}{\varphi }} }{\varphi }-\frac{C_1  b_k  e^{-\frac{t}{\varphi }} }{2 \varphi }+\frac{C_1  a_k  t e^{-\frac{t}{\varphi }} }{2 \varphi }$
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+simplify(H2(t))
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+ans = 
+    $\displaystyle \begin{array}{l}
+\frac{{\sigma_1 }^2 }{2}-\sigma_1  {\left(a_k  t-C_4 +\frac{C_1  e^{-\frac{t}{\varphi }} }{2}+C_3  \varphi  e^{t/\varphi } \right)}+C_2  {\left(e_i +b_k  t+\frac{a_k  t^2 }{2}-C_1  \varphi  e^{-\frac{t}{\varphi }} -a_k  \varphi  t\right)}\\
+\mathrm{}\\
+\textrm{where}\\
+\mathrm{}\\
+\;\;\sigma_1 =b_k -a_k  \varphi +a_k  t+C_1  e^{-\frac{t}{\varphi }} 
+\end{array}$
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+expand(diff(H2(t),t))
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+ans = 
+    $\displaystyle C_4  a_k +C_2  b_k -{a_k }^2  t-C_3  b_k  e^{t/\varphi } -C_2  a_k  \varphi +C_2  a_k  t+C_1  C_2  e^{-\frac{t}{\varphi }} -C_3  a_k  t e^{t/\varphi } -\frac{C_1  C_4  e^{-\frac{t}{\varphi }} }{\varphi }-\frac{C_1  b_k  e^{-\frac{t}{\varphi }} }{2 \varphi }+\frac{C_1  a_k  t e^{-\frac{t}{\varphi }} }{2 \varphi }$
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+
+
+%Thrid Arc
+p3(t) = (1/6)*g_i*t^3+(1/2)*h_i*t^2+m_i*t+n_i
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+p3(t) = 
+    $\displaystyle \frac{g_i  t^3 }{6}+\frac{h_i  t^2 }{2}+m_i  t+n_i $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+v3(t) = (1/2)*g_i*t^2+h_i*t+m_i
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+v3(t) = 
+    $\displaystyle \frac{g_i  t^2 }{2}+h_i  t+m_i $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+u3(t) = g_i*t+h_i
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+u3(t) = 
+    $\displaystyle h_i +g_i  t$
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+lambdaP3(t) = g_i
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+lambdaP3(t) = 
+    $\displaystyle g_i $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+lambdaV3(t) = -u3(t)
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+lambdaV3(t) = 
+    $\displaystyle -h_i -g_i  t$
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+H3(t) =  simplify((1/2)*u3(t)^2 + lambdaP3(t)*v3(t) + lambdaV3(t)*u3(t))
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+H3(t) = 
+    $\displaystyle g_i  m_i -\frac{{h_i }^2 }{2}$
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+
+
+
+%Initial and final condition 
+eqn1 = p1(t_0) == p_0
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+eqn1 = 
+    $\displaystyle \frac{a_i  {t_0 }^3 }{6}+\frac{b_i  {t_0 }^2 }{2}+c_i  t_0 +d_i =p_0 $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+eqn2 = v1(t_0) == v_0
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+eqn2 = 
+    $\displaystyle \frac{a_i  {t_0 }^2 }{2}+b_i  t_0 +c_i =v_0 $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+eqn3 = p3(t_f) == p_f
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+eqn3 = 
+    $\displaystyle \frac{g_i  {t_f }^3 }{6}+\frac{h_i  {t_f }^2 }{2}+m_i  t_f +n_i =p_f $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+eqn4 = v3(t_f) == v_f
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+eqn4 = 
+    $\displaystyle \frac{g_i  {t_f }^2 }{2}+h_i  t_f +m_i =v_f $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+%conitinuity at states at t1 and t2
+eqn5 = p1(t_1) == p2(t_1)
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+eqn5 = 
+    $\displaystyle \frac{a_i  {t_1 }^3 }{6}+\frac{b_i  {t_1 }^2 }{2}+c_i  t_1 +d_i =f_i +e_i  t_1 +\frac{a_k  {t_1 }^3 }{6}+\frac{b_k  {t_1 }^2 }{2}-\frac{a_k  \varphi  {t_1 }^2 }{2}+C_1  \varphi^2  e^{-\frac{t_1 }{\varphi }} $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+eqn6 = v1(t_1) == v2(t_1)
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+eqn6 = 
+    $\displaystyle \frac{a_i  {t_1 }^2 }{2}+b_i  t_1 +c_i =e_i +b_k  t_1 +\frac{a_k  {t_1 }^2 }{2}-C_1  \varphi  e^{-\frac{t_1 }{\varphi }} -a_k  \varphi  t_1 $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+eqn7 = p2(t_2) == p3(t_2)
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+eqn7 = 
+    $\displaystyle f_i +e_i  t_2 +\frac{a_k  {t_2 }^3 }{6}+\frac{b_k  {t_2 }^2 }{2}-\frac{a_k  \varphi  {t_2 }^2 }{2}+C_1  \varphi^2  e^{-\frac{t_2 }{\varphi }} =\frac{g_i  {t_2 }^3 }{6}+\frac{h_i  {t_2 }^2 }{2}+m_i  t_2 +n_i $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+eqn8 = v2(t_2) == v3(t_2)
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+eqn8 = 
+    $\displaystyle e_i +b_k  t_2 +\frac{a_k  {t_2 }^2 }{2}-C_1  \varphi  e^{-\frac{t_2 }{\varphi }} -a_k  \varphi  t_2 =\frac{g_i  {t_2 }^2 }{2}+h_i  t_2 +m_i $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+%Entrance to the Constrained arc 
+eqn9 = lambdaP1(t_1) == lambdaP2(t_1) + P
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+eqn9 = 
+    $\displaystyle a_i =C_2 +P$
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+eqn10 = lambdaV1(t_1) == lambdaV2(t_1) + P*phi
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+eqn10 = 
+    $\displaystyle -b_i -a_i  t_1 =C_4 +P \varphi -a_k  t_1 -\frac{C_1  e^{-\frac{t_1 }{\varphi }} }{2}-C_3  \varphi  e^{t_1 /\varphi } $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+%eqn11 = H1(t_1) == H2(t_1) - P*(v2(t)-vk(t)+phi*u2(t))
+eqn11 = simplify(H1(t_1)) == simplify(H2(t_1))
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+eqn11 = 
+    $\displaystyle \begin{array}{l}
+a_i  c_i -\frac{{b_i }^2 }{2}=\frac{{\sigma_1 }^2 }{2}-\sigma_1  {\left(a_k  t_1 -C_4 +\frac{C_1  e^{-\frac{t_1 }{\varphi }} }{2}+C_3  \varphi  e^{t_1 /\varphi } \right)}+C_2  {\left(e_i +b_k  t_1 +\frac{a_k  {t_1 }^2 }{2}-C_1  \varphi  e^{-\frac{t_1 }{\varphi }} -a_k  \varphi  t_1 \right)}\\
+\mathrm{}\\
+\textrm{where}\\
+\mathrm{}\\
+\;\;\sigma_1 =b_k -a_k  \varphi +a_k  t_1 +C_1  e^{-\frac{t_1 }{\varphi }} 
+\end{array}$
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+
+%Exit from the constrained arc 
+eqn12 = H2(t_2) == H3(t_2)
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+eqn12 = 
+    $\displaystyle \begin{array}{l}
+\frac{{\sigma_1 }^2 }{2}-\sigma_1  {\left(a_k  t_2 -C_4 +\frac{C_1  e^{-\frac{t_2 }{\varphi }} }{2}+C_3  \varphi  e^{t_2 /\varphi } \right)}+C_2  {\left(e_i +b_k  t_2 +\frac{a_k  {t_2 }^2 }{2}-C_1  \varphi  e^{-\frac{t_2 }{\varphi }} -a_k  \varphi  t_2 \right)}=g_i  m_i -\frac{{h_i }^2 }{2}\\
+\mathrm{}\\
+\textrm{where}\\
+\mathrm{}\\
+\;\;\sigma_1 =b_k -a_k  \varphi +a_k  t_2 +C_1  e^{-\frac{t_2 }{\varphi }} 
+\end{array}$
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+eqn13 = lambdaP2(t_2) == lambdaP3(t_2)
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+eqn13 = 
+    $\displaystyle C_2 =g_i $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+eqn14 = lambdaV2(t_2) == lambdaV3(t_2) 
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+eqn14 = 
+    $\displaystyle C_4 -a_k  t_2 -\frac{C_1  e^{-\frac{t_2 }{\varphi }} }{2}-C_3  \varphi  e^{t_2 /\varphi } =-h_i -g_i  t_2 $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+
+eqn15 = simplify(u2(t)+lambdaV2(t)+muS(t)*phi ==(u1(t)+lambdaV1(t)))
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+eqn15 = 
+    $\displaystyle C_4 +b_k =C_2  \varphi $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+eqn16 = simplify( H2(t_1) == H2(t_2))
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+eqn16 = 
+    $\displaystyle \begin{array}{l}
+2 \sigma_1  {\left(a_k  t_2 -C_4 +\frac{\sigma_3 }{2}+C_3  \varphi  e^{t_2 /\varphi } \right)}+{\sigma_2 }^2 +2 C_2  {\left(e_i +b_k  t_1 +\frac{a_k  {t_1 }^2 }{2}-C_1  \varphi  e^{-\frac{t_1 }{\varphi }} -a_k  \varphi  t_1 \right)}=2 \sigma_2  {\left(a_k  t_1 -C_4 +\frac{\sigma_4 }{2}+C_3  \varphi  e^{t_1 /\varphi } \right)}+{\sigma_1 }^2 +2 C_2  {\left(e_i +b_k  t_2 +\frac{a_k  {t_2 }^2 }{2}-C_1  \varphi  e^{-\frac{t_2 }{\varphi }} -a_k  \varphi  t_2 \right)}\\
+\mathrm{}\\
+\textrm{where}\\
+\mathrm{}\\
+\;\;\sigma_1 =b_k -a_k  \varphi +a_k  t_2 +\sigma_3 \\
+\mathrm{}\\
+\;\;\sigma_2 =b_k -a_k  \varphi +a_k  t_1 +\sigma_4 \\
+\mathrm{}\\
+\;\;\sigma_3 =C_1  e^{-\frac{t_2 }{\varphi }} \\
+\mathrm{}\\
+\;\;\sigma_4 =C_1  e^{-\frac{t_1 }{\varphi }} 
+\end{array}$
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+eqn17 = simplify(p2(t_1)-pk(t_1)+phi*v2(t_1)+gamma == 0)
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+eqn17 = 
+    $\displaystyle a_k  t_1  \varphi^2 +d_k +c_k  t_1 =f_i +\gamma +e_i  \varphi +e_i  t_1 +b_k  \varphi  t_1 $
+\end{matlabsymbolicoutput}
+\begin{matlabcode}
+eqns = [eqn1,eqn2,eqn3,eqn4,eqn5,eqn6,eqn7,eqn8,eqn9,eqn10,eqn11,eqn12,eqn13,eqn14,eqn15,eqn16,eqn17];
+variables =[ a_i,b_i ,c_i, d_i, e_i, f_i, g_i, h_i ,m_i ,n_i ,t_1 ,t_2, C1, C2, C3, C4 ,P]
+\end{matlabcode}
+\begin{matlabsymbolicoutput}
+variables = 
+    $\displaystyle \left(\begin{array}{ccccccccccccccccc}
+a_i  & b_i  & c_i  & d_i  & e_i  & f_i  & g_i  & h_i  & m_i  & n_i  & t_1  & t_2  & C_1  & C_2  & C_3  & C_4  & P
+\end{array}\right)$
+\end{matlabsymbolicoutput}
+
+\end{document}

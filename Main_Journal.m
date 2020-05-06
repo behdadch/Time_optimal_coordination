@@ -35,7 +35,7 @@ phi = 0.2;
 conflict = zeros(totalVehicles,totalVehicles,totalZones);
 pathInfo = zeros(totalVehicles,totalZones);
 ANIMATION = false;
-PLOT = false;
+PLOT = true;
 RANDOM = false;
 CONSTRAINT = false;
 %temp = zeros(totalVehicles,1);
@@ -127,8 +127,11 @@ tx = [0];
 
 if ANIMATION
     mapBuilder();
+    axis([0 900 0 700])
+    xlim = get(gca,'xlim')-150;
+    ylim = get(gca,'ylim')-10;
     txt2 = 'Time:';
-    timetext=text(500,400,txt2);
+    timetext=text(xlim(2),ylim(2),txt2);
 end
 %%
 count = zeros(1,totalVehicles);
@@ -137,9 +140,8 @@ RESTART = false;
 for i = 1:totalVehicles
     solved(i).constants = nan;
     solved(i).done = false; 
-
 end
-while dt < 100000
+while dt < 100000 && tx(end) < max(T(:))
     dt = dt+1;
     if RESTART == true
         dt = 1;
@@ -204,6 +206,7 @@ while dt < 100000
         end
         %Check the zone
         if tx(end)<= T(i,1)
+            %CAV i has not entered yet
             continue
         end
         %[m,j,finish] = zoneCheck(i,x(i).Position(end),pathInfo,path);
@@ -265,9 +268,9 @@ while dt < 100000
     end
     if ANIMATION
         txt = num2str(time);
-        htext=text(550,400,txt);
+        htext = text(xlim(2)+100,ylim(2),txt);
         M(dt) = getframe(gcf);
-        pause(0.001);
+        pause(0.01);
         delete(htext)
         for i=1:totalVehicles
             delete(hh(i))
@@ -282,21 +285,28 @@ while dt < 100000
     
 end
 %% Post- Processing 
-
-
-%%Animation %TODO
-
-
-
-
-%%
-%%Plot 
+%Plot 
 if PLOT
-    width=4;%inch
-    height=2;
-    figure('Units','inches',...
-        'Position',[0 0 width height],...
-        'PaperPositionMode','auto');
+%     width=4;%inch
+%     height=2;
+%     figure('Units','inches',...
+%         'Position',[0 0 width height],...
+%         'PaperPositionMode','auto');
+    %%%%%%%%%%%%%%
+figure(1) 
+i =13;
+plot(tx(find(tx==TZeros(i)):(length(x(i).Control)+find(tx==TZeros(i))-1)),x(i).Control(:),'k','LineWidth',1.2)
+hold on
+ylim = get(gca,'ylim');
+tPl = T(i,:);
+tPl = tPl(1:find(tPl == max(tPl)));
+for i=1:length(tPl)
+    plot([tPl(i),tPl(i)],ylim,'--r')
+end 
+xlabel('time')
+ylabel('Control')
+grid on
+    %%%%%%%%%%%%%%%%%
 %     figure(1);
 %     for i=13:16%totalVehicles
 %         plot(tx(find(tx==TZeros(i)):(length(x(i).Velocity)+find(tx==TZeros(i))-1)),x(i).Velocity(:));
@@ -327,7 +337,7 @@ if PLOT
 %     PrintFig(txt2,lbl2,ax2,1);
     %
     %figure(3)
-    RearEndPosition(3,2,x,tx,TZeros,pathInfo,path);
+    %RearEndPosition(3,2,x,tx,TZeros,pathInfo,path);
     %figure
      %RearEndPositionZone(13,x,tx,TZeros,pathInfo,path);
 end
@@ -453,10 +463,6 @@ end
 
 
 
-%%
-%TODO : fix control value at the switching point
-
-
 
 %%%%%%%%%%%%%README%%%%%%%%%%%%
 % axis([0 80 -3 3])
@@ -491,7 +497,6 @@ end
 %%
 %Readme
 %min(A(A>0)) return minimum of nonzero array
-%maybe using structure would be a good idea
 %%
 
 %  newVid = VideoWriter('r=10Sim2', 'MPEG-4'); % New

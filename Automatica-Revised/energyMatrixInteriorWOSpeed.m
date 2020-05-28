@@ -6,17 +6,18 @@ n = totalZone*4 + (totalZone-1)*1; % 4 constant for each zone and 1 pi for each 
 
 A = zeros(n,n);
 Y = zeros(n,1);
-
 %X = [constants for the first arc, constant for the second arc, ..., constants for the last arc, (Pis first and second arc),..., (Pi last-1 and last arc)]
 %p at each time instant ( last time u is ==0)
 for i = 1:(length(t)) %length t  e.g. length = 5 -> 5 eqs BC for position
     if i == length(t) %position at the end of the last arc
         A(i,4*i-7:4*i-4) = [t(i)^3/6 t(i)^2/2 t(i) 1];
         Y(i) = p(i);
+        break
     end
     A(i,4*i-3:4*i) = [t(i)^3/6 t(i)^2/2 t(i) 1]; % position at each initial of each arc time
     Y(i) = p(i);
 end
+
 
 %Initial Speed 1 eq
 A(length(t)+1,1:4) = [t(1)^2/2 t(1) 1 0];
@@ -36,9 +37,9 @@ cond = length(t)+2;
     cond = cond + (length(t)-2)*2;
     
     for i = 1:length(t)-2 %e.g. 2 *(length(t)-2) e.g length = 5 -> 6 jump conditions
-        %lambda p
+        %lambda p 
         A(cond + 2*i-1,4*i-3) = 1;
-        A(cond + 2*i-1,4*i+1) = 1;
+        A(cond + 2*i-1,4*i+1) = -1;
         A(cond + 2*i-1,(length(t)-1)*4 + i) = -1;
         Y(cond + 2*i-1) = 0;
         

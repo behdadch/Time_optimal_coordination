@@ -1,4 +1,5 @@
 function[a,b,c,d,f,g,t1]= UlimMatrix(t_0,t_m,p_0,p_m,v_0,v_m,u_min)
+%%unconstrained -> U_min arc
 % F(1) = 0.5*a*t0^2+b*t0+c-v0;
 % F(2) = (1/6)*a*t0^3+0.5*b*t0^2+c*t0+d-p0;
 % F(3) = umin*tm+f-vm;

@@ -1,7 +1,9 @@
-function scheduleFinderTest(path,pathInfo,totalVehicles,timeHeadway,TZeros)
+function duration = scheduleFinderTest(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo)
 global T
 global R
 global D
+global vMerge 
+global v_min
 for i=1:totalVehicles
     PathNumber = path(i);
     j=1;
@@ -28,9 +30,19 @@ for i=1:totalVehicles
             %MILP should be solved
             order = ConflictInfo.order;
             schedule = ConflictInfo.schedule;
-            Sol = MILPFinal(T(i,1),nnz(pathInfo(PathNumber,:)),R(i,:),D(i,:),order,schedule,timeHeadway);
-            T(i,2:nnz(pathInfo(PathNumber,:))+1)=Sol;
-            T(i,:)
+            [Sol,computationTime,exitflag] = MILPFinal(T(i,1),nnz(pathInfo(PathNumber,:)),R(i,:),D(i,:),order,schedule,timeHeadway,i);
+            while  exitflag == -2 && vMerge(i)> v_min 
+                fprintf('Decreasing vmerge speed from %4.2f to %4.2f for CAV: %d \n',vMerge(i),vMerge(i)-0.1,i);
+                vMerge(i) = vMerge(i) - 0.1;
+                ReleaseDeadlineFinder(path,pathInfo,totalVehicles,zoneInfo);
+                R(:,:)=round(R(:,:),2);
+                D(:,:)=round(D(:,:),2);
+                [Sol,computationTime,exitflag] = MILPFinal(T(i,1),nnz(pathInfo(PathNumber,:)),R(i,:),D(i,:),order,schedule,timeHeadway,i);
+            end 
+            solution = Sol(1:nnz(pathInfo(PathNumber,:)))';
+            T(i,2:nnz(pathInfo(PathNumber,:))+1)= solution;
+            T(i,:);
+            duration(i) = computationTime;
         end
         j = j+1;
         

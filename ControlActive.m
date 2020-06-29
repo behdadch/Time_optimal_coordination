@@ -1,5 +1,5 @@
 function F = ControlActive(x,t0,tm,p0,pm,v0,vm,U)
-  %Uncons. ==> ControlInputActive
+  %UControlActive --> Uncons
 % F(1) = 0.5*a*t0^2+b*t0+c-v0;
 % F(2) = (1/6)*a*t0^3+0.5*b*t0^2+c*t0+d-p0;
 % F(3) = U*tm+f-vm;

@@ -1,0 +1,77 @@
+function duration = scheduleFinderTest(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo)
+global T
+global R
+global D
+global vMerge
+global v_min
+for i=1:7%totalVehicles
+    PathNumber = path(i);
+    ConflictInfo.zoneInd = []; %%this vector grabs the zone index that conflict is happening
+    ConflictInfo.schedule = []; %schedule of other CAV which CAV i has coupled safety constraint with
+    ConflictInfo.rear = [];
+    T(i,1) = TZeros(i);
+    for kk = 1 : i-1
+        pathii = pathInfo(path(i),pathInfo(path(i),:)>0);
+        pathKK = pathInfo(path(kk),pathInfo(path(kk),:)>0);
+        [conflictZones,indicesA,indicesB] = intersect(pathii,pathKK,'stable');
+        if (isempty(conflictZones))
+            %% there is no conflict with CAV kk
+            continue;
+        end
+        indicesA = indicesA(indicesA>1)';
+        indicesB = indicesB(indicesB>1)';
+        if (length(indicesA)>1)
+            %There are two zones which are common between CAV i and kk
+            %% now we need to check if theses two zones are after each other, if so --> rear-end will happen, so all these
+            %zones should share the same binary variable
+            if (indicesA(1) == indicesA(2)-1)
+                %TODO: REAR-END
+                rear = kk+zeros(1,nnz(indicesA));
+                if 
+            else
+                rear = zeros(1,nnz(indicesA));
+            end
+            
+        else
+            rear = 0;
+        end        
+       
+        ConflictInfo.zoneInd = [ConflictInfo.zoneInd, indicesA];
+        ConflictInfo.schedule = [ConflictInfo.schedule, T(kk,indicesB)];
+        ConflictInfo.rear = [ConflictInfo.rear,rear];
+        
+    end
+    %MILP should be solved
+    if i ==2
+        ConflictInfo.rear
+        ConflictInfo.zoneInd
+    end
+    %%
+    zoneInd = ConflictInfo.zoneInd;
+    schedule = ConflictInfo.schedule;
+    rear = ConflictInfo.rear;
+    [Sol,computationTime,exitflag] = MILPFinal(T(i,1),nnz(pathInfo(PathNumber,:)),R(i,:),D(i,:),zoneInd,schedule,rear,timeHeadway,i);
+    %             while  exitflag == -2 && vMerge(i)> v_min
+    %                 fprintf('Decreasing vmerge speed from %4.2f to %4.2f for CAV: %d \n',vMerge(i),vMerge(i)-0.1,i);
+    %                 vMerge(i) = vMerge(i) - 0.1;
+    %                 ReleaseDeadlineFinder(path,pathInfo,totalVehicles,zoneInfo);
+    %                 R(:,:)=round(R(:,:),2);
+    %                 D(:,:)=round(D(:,:),2);
+    %                 [Sol,computationTime,exitflag] = MILPFinal(T(i,1),nnz(pathInfo(PathNumber,:)),R(i,:),D(i,:),order,schedule,timeHeadway,i);
+    %             end
+    if i==2
+        Sol
+    end 
+    solution = Sol(1:nnz(pathInfo(PathNumber,:)))';
+    T(i,2:nnz(pathInfo(PathNumber,:))+1)= solution;
+    duration(i) = computationTime;
+    
+    %%
+    % % % %             T(i,1) = TZeros(i);
+    % % % %             T(i,2:nnz(pathInfo(PathNumber,:))+1)=-i+zeros(1,nnz(pathInfo(PathNumber,:)));
+    % % % %             duration(i) = -1;
+    % % % %             i
+    % % % %             ConflictInfo.order
+    % % % %             ConflictInfo.schedule
+end
+end

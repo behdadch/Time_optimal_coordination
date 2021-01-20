@@ -25,7 +25,7 @@ PLOT = true;
 RANDOM = false;
 CONSTRAINT = true;
 ANIMATIONPP = false;
-INPUT = true;
+INPUT = false;
 
 %%
 if INPUT

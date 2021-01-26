@@ -16,20 +16,25 @@ global T
 global R
 global D
 global timeHeadway
+
+timeHeadway = 1.5;
 totalZones = 22; %Number of zones
 totalPath =  4;
+totalVehicles = 28; %Number of vehicles
 %%
+global FIFO
 
 ANIMATION = false;
-PLOT = true;
-RANDOM = false;
+PLOT = false;
+RANDOM = true;
 CONSTRAINT = true;
-ANIMATIONPP = false;
+ANIMATIONPP = true;
 INPUT = false;
+FIFO = false;
 
 %%
 if INPUT
-    importedData = importdata("C:\Users\Behdad\Dropbox\double intersection\Data\Seed1\Baseline-Input-400-15m-30s.csv");
+    importedData = importdata("C:\Users\Behdad\Dropbox\Publications\TITS-Results\double intersection\Data\Seed1\Baseline-Input-800-15m-30s.csv");
     data = importedData.data;
     for i=1:length(data)
         index = find(data(:,2)==i);
@@ -37,24 +42,24 @@ if INPUT
         path(i) = data(index,3);
     end
     totalVehicles = length(data);
+    RANDOM = false; %this is to make sure we do not use RANDOM by mistake
 else
     
     if RANDOM
         tmin = 0;
-        tmax = totalVehicles*timeHeadway*1.25;
+        tmax = 25;
         n = totalVehicles;
         TZeros = sort(tmin+rand(1,n)*(tmax-tmin));
         TZeros = round(TZeros,2);
         TZeros = TZeros - TZeros(1);
     else
         %%
-        TZeros = [0,2.0,2.2,4.3,5.8,7.4,9.3,10.9,11.3,11.4,12.1,13.1,13.6,14.2,14.6,16.97,26,37,42,55]; %Random time generated for the Journal version
+        TZeros = [0,2.0,25,4.3,5.8,7.4,9.3,10.9,11.3,11.4,12.1,13.1,13.6,14.2,14.6,16.97,26,37,42,55]; %Random time generated for the Journal version
         %TZeros = [0,1,1.5,1.7,1.65,2.5,3,3.2,3.15,4,4.5,4.7,4.65,5.5,6,6.2];
         
     end
     %in pathInfo(i,j)-> i is vehicle index after order calculation and the j shows the
     % zone that vehicle is in that.
-    totalVehicles = 20; %Number of vehicles
     
     for i = 1:totalVehicles
         path(i) = mod(i,totalPath);
@@ -78,7 +83,6 @@ u_min = -1;
 u_max = 1;
 v_max = 25;
 v_min = 5;
-timeHeadway = 1.5;
 T =[];
 R =[];
 D =[];
@@ -138,9 +142,13 @@ D(:,:)=round(D(:,:),2);
 
 %%
 %Finding schedules
-duration = scheduleFinderTest(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo);
-max(duration);
-mean(duration);
+duration = scheduleFinderDec(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo);
+T;
+max(duration)
+mean(duration)
+duration2 = scheduleFinderCentralized(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo);
+T;
+duration2
 T(:,:)=round(T(:,:),2);
 
 %%
@@ -437,7 +445,7 @@ end
 %%PostProcessing
 %%
 if ANIMATIONPP
-    M = PostProcessAnimation(x,T,path,"1200");
+    M = PostProcessAnimation(x,T,path);
     date = datetime;
     date.Format = 'MMMM-d-yyyy-HH-mm-ss';
     name = string(date);

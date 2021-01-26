@@ -10,7 +10,7 @@ gamma = 5;
 phi = 0.2;
 %%
 
-timeStep = 0.1;
+timeStep = 0.5; %% change the speed of animation 
 flow_title = [];
 horizon = max(vehiclesSchedules(:));
 switch  nargin
@@ -100,7 +100,7 @@ for t = time
     txt = num2str(t);
     htext = text(xlim(2)+100,ylim(2),txt);
     M(frame) = getframe(gcf);
-    pause(0.01);
+    pause(0.1);
     delete(htext)
     for ii=1:length(hh)
         delete(hh(ii));

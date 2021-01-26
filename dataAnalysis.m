@@ -2,10 +2,10 @@ clc
 clear
  HIST = false;
 %%
-importedDataBL = importdata("C:\Users\Behdad\Dropbox\double intersection\Data\Seed1\Baseline-output-1200-15m-30s.csv");
+importedDataBL = importdata("C:\Users\Behdad\Dropbox\Publications\TITS-Results\double intersection\Data\Seed42\Baseline-output-400-15m-30s.csv");
 DataBl  = importedDataBL.data;
 
-DataCAV = load('E:\matlab_workspace\SchedulingSimulation\IEEETransactionOnIntelligent\Seed1\traj_optimal_1200_seed1.mat');
+DataCAV = load('E:\matlab_workspace\SchedulingSimulation\IEEETransactionOnIntelligent\Seed42\FIFO\traj_optimal_400_seed42_FIFO.mat');
 CAV = DataCAV.x;
 
 

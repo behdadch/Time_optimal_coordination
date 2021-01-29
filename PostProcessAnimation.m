@@ -10,7 +10,7 @@ gamma = 5;
 phi = 0.2;
 %%
 
-timeStep = 0.5; %% change the speed of animation 
+timeStep = 0.5; %% change the speed of animation
 flow_title = [];
 horizon = max(vehiclesSchedules(:));
 switch  nargin
@@ -18,7 +18,7 @@ switch  nargin
         flow_title = varargin{1};
     case 6
         horizon = varargin{1};
-        timeStep = varargin{2}; 
+        timeStep = varargin{2};
 end
 %%
 mapBuilder();
@@ -33,7 +33,10 @@ timetext=text(xlim(2)-500,ylim(2),flow_title+" [veh/h]");
 %%
 
 time = 0:timeStep:horizon;
-frame = 0; 
+frame = 0;
+col = {[0, 0, 1],[1, 0, 0],[0, 0.75, 0.75],[0.75, 0, 0.75],[0.25, 0.25, 0.25],[0.9290, 0.6940, 0.1250]	...
+    ,[0/255 204/255 55/255],[1 1 1]	};
+
 for t = time
     frame = frame +1;
     for i = 1:numel(vehiclesProfile)
@@ -44,7 +47,7 @@ for t = time
         if(xpos<0 || vpos<0)
             
             fprintf('Position or speed of CAV %d is negative \n',i);
-        end 
+        end
         
         PathNumber = path(i);
         if PathNumber == 1 %&& finish == 0
@@ -53,7 +56,7 @@ for t = time
             yy(i) = 2*roadLength+mergeLength - xpos;
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),[0,0,1]);
+            c(i) = circle(xx(i),yy(i),HD(i),col{1});
             hold on;
         elseif PathNumber == 2
             % path #2
@@ -66,7 +69,7 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.k');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),[0,1,1]);
+            c(i) = circle(xx(i),yy(i),HD(i),col{2});
             hold on;
         elseif PathNumber == 3
             % path #3
@@ -74,7 +77,7 @@ for t = time
             yy(i) = roadLength+mergeLength/4;
             hh(i) = plot(xx(i),yy(i),'.r');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i));
+            c(i) = circle(xx(i),yy(i),HD(i),col{3});
             hold on
         elseif PathNumber == 4
             if xpos< roadLength+3*mergeLength/4
@@ -89,8 +92,40 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.b');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),[1,1,1]);
+            c(i) = circle(xx(i),yy(i),HD(i),col{4});
             hold on
+        elseif PathNumber == 5
+            xx(i) = 2*roadLength + intersectionDistance + 2*mergeLength - xpos;
+            yy(i) = roadLength+3*mergeLength/4;
+            hh(i) = plot(xx(i),yy(i),'.r');
+            HD(i) = gamma + vpos*phi;
+            c(i) = circle(xx(i),yy(i),HD(i),col{5});
+            hold on
+        elseif PathNumber == 6
+            xx(i) = roadLength+mergeLength/4;
+            yy(i) = 2*roadLength+mergeLength - xpos;
+            hh(i) = plot(xx(i),yy(i),'.m');
+            HD(i) = gamma + vpos*phi;
+            c(i) = circle(xx(i),yy(i),HD(i),col{6});
+            hold on;
+        elseif PathNumber == 7 %&& finish == 0
+            % path #1
+            xx(i) = roadLength+3*mergeLength/4;
+            yy(i) = xpos;
+            hh(i) = plot(xx(i),yy(i),'.m');
+            HD(i) = gamma + vpos*phi;
+            c(i) = circle(xx(i),yy(i),HD(i),col{7});
+            hold on;
+        elseif PathNumber == 8 %&& finish == 0
+            % path #1
+            xx(i) = intersectionDistance+roadLength+7*mergeLength/4;
+            yy(i) = xpos;
+            hh(i) = plot(xx(i),yy(i),'.m');
+            HD(i) = gamma + vpos*phi;
+            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            hold on;
+            
+            
         end
     end
     

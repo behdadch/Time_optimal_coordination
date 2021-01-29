@@ -1,4 +1,4 @@
-function duration = scheduleFinderCentralized(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo)
+function [duration,output] = scheduleFinderCentralized(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo)
 global T
 global R
 global D
@@ -17,7 +17,7 @@ for i=1:totalVehicles
         pathii = pathInfo(path(i),pathInfo(path(i),:)>0);
         pathKK = pathInfo(path(kk),pathInfo(path(kk),:)>0);
         [conflictZones,indicesA,indicesB] = intersect(pathii,pathKK,'stable');
-        if (isempty(conflictZones))
+        if (isempty(conflictZones)&& pathii(1)~=pathKK(1))
             %% there is no conflict with CAV kk
             continue;
         end
@@ -33,11 +33,13 @@ for i=1:totalVehicles
                 rear = kk+zeros(1,nnz(indicesA));
                 if(length(rear) ==length(pathii)-1)
                     rear= -rear; %% this means that CAV i and kk are in the same path and CAV i can not reach the end sooner than CAV kk --> therefore B_i = 0(refer to paper)
-                end
+                end 
             else
                 rear = zeros(1,nnz(indicesA));
             end
             
+        elseif pathii(1)== pathKK(1) %they start on the same segment and then merge out
+                    rear= -kk;
         else
             rear = 0;
         end
@@ -51,7 +53,7 @@ for i=1:totalVehicles
 end
 %% Now we should pass this information to the solver
 
-    [Sol,computationTime,exitflag] = MILPCentralized(T(:,1), path, pathInfo, R(:,:), D(:,:), ConflictInfo, timeHeadway, totalVehicles);
+    [Sol,computationTime,exitflag,output] = MILPCentralized(T(:,1), path, pathInfo, R(:,:), D(:,:), ConflictInfo, timeHeadway, totalVehicles);
     fNew = 0;
     Sol;
     for ii = 1: totalVehicles

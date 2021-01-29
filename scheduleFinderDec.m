@@ -1,4 +1,4 @@
-function duration = scheduleFinderDec(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo)
+function [duration,output] = scheduleFinderDec(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo)
 global T
 global R
 global D
@@ -16,10 +16,11 @@ for i=1:totalVehicles
         pathii = pathInfo(path(i),pathInfo(path(i),:)>0);
         pathKK = pathInfo(path(kk),pathInfo(path(kk),:)>0);
         [conflictZones,indicesA,indicesB] = intersect(pathii,pathKK,'stable');
-        if (isempty(conflictZones))
+        if (isempty(conflictZones) && pathii(1)~=pathKK(1))
             %% there is no conflict with CAV kk
             continue;
         end
+        
         indicesA = indicesA(indicesA>1)';
         indicesB = indicesB(indicesB>1)';
         if (length(indicesA)>1)
@@ -36,6 +37,8 @@ for i=1:totalVehicles
                 rear = zeros(1,nnz(indicesA));
             end
             
+        elseif pathii(1)==pathKK(1) %they start on the same segment and then merge out
+            rear= -kk;
         else
             rear = 0;
         end
@@ -54,7 +57,7 @@ for i=1:totalVehicles
     zoneInd = ConflictInfo.zoneInd;
     schedule = ConflictInfo.schedule;
     rear = ConflictInfo.rear;
-    [Sol,computationTime,exitflag] = MILPDec(T(i,1),nnz(pathInfo(PathNumber,:)),R(i,:),D(i,:),zoneInd,schedule,rear,timeHeadway,i);
+    [Sol,computationTime,exitflag,output] = MILPDec(T(i,1),nnz(pathInfo(PathNumber,:)),R(i,:),D(i,:),zoneInd,schedule,rear,timeHeadway,i);
     while  exitflag == -2 && vMerge(i)> v_min
         fprintf('Decreasing vmerge speed from %4.2f to %4.2f for CAV: %d \n',vMerge(i),vMerge(i)-0.1,i);
         vMerge(i) = vMerge(i) - 0.1;

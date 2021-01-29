@@ -1,4 +1,4 @@
-function [Schedule, computationTime, exitflag] = MILPCentralized(Tinitial, path, pathInfo, Release,Deadline, ConflictInfo, timeHeadway, totalVehicles)
+function [Schedule, computationTime, exitflag,output] = MILPCentralized(Tinitial, path, pathInfo, Release,Deadline, ConflictInfo, timeHeadway, totalVehicles)
 
 %% Initialization
 solver = "IBMCPLEX";
@@ -134,7 +134,6 @@ end
 fprintf("___________\n");
 
 
-xTest = [15.8300000000000;16.8100000000000;17.7900000000000;33.6200000000000;17.8300000000000;18.8100000000000;24.8700000000000;25.8500000000000;26.8300000000000;42.6600000000000;0;40.8300000000000;41.8100000000000;42.7900000000000;58.6200000000000;0;0;0;0];
 
 %%
 

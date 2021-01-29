@@ -1,7 +1,7 @@
 clear
 close all
-clc
 %%
+fprintf("+++++++++++++++++++++++\n");
 global u_min
 global u_max
 global v_max
@@ -19,10 +19,10 @@ global timeHeadway
 
 timeHeadway = 1.5;
 totalZones = 22; %Number of zones
-totalPath =  4;
-totalVehicles = 28; %Number of vehicles
+totalPath =  8;
+totalVehicles = 50; %Number of vehicles
 %%
-global FIFO
+global FIFO 
 
 ANIMATION = false;
 PLOT = false;
@@ -30,8 +30,11 @@ RANDOM = true;
 CONSTRAINT = true;
 ANIMATIONPP = true;
 INPUT = false;
+CENTRALIZED = true;
 FIFO = false;
-
+if FIFO 
+    fprintf("Following FIFO Structure\n")
+end
 %%
 if INPUT
     importedData = importdata("C:\Users\Behdad\Dropbox\Publications\TITS-Results\double intersection\Data\Seed1\Baseline-Input-800-15m-30s.csv");
@@ -46,12 +49,8 @@ if INPUT
 else
     
     if RANDOM
-        tmin = 0;
-        tmax = 25;
-        n = totalVehicles;
-        TZeros = sort(tmin+rand(1,n)*(tmax-tmin));
-        TZeros = round(TZeros,2);
-        TZeros = TZeros - TZeros(1);
+        rng(7,'twister');
+        TZeros = randomTimeGen(totalVehicles);
     else
         %%
         TZeros = [0,2.0,25,4.3,5.8,7.4,9.3,10.9,11.3,11.4,12.1,13.1,13.6,14.2,14.6,16.97,26,37,42,55]; %Random time generated for the Journal version
@@ -82,7 +81,7 @@ vMerge(1:totalVehicles) = 15;
 u_min = -1;
 u_max = 1;
 v_max = 25;
-v_min = 5;
+v_min = 0;
 T =[];
 R =[];
 D =[];
@@ -125,9 +124,10 @@ pathInfo(1,1:4) = [22,5,7,17];  %Path 1
 pathInfo(2,1:6) = [12,4,13,7,8,19]; %Path 2
 pathInfo(3,1:7) = [10,3,4,13,7,8,19]; %Path 3
 pathInfo(4,1:9) = [18,8,6,5,14,2,1,3,11];  %Path 4
-
-% pathInfo(5,1:7) = [20,6,5,14,2,1,9]; %Path 5
-% pathInfo(6,1:4) = [16,1,3,11]; %Path 6
+pathInfo(5,1:7) = [20,6,5,14,2,1,9]; %Path 5
+pathInfo(6,1:4) = [16,1,3,11]; %Path 6
+pathInfo(7,1:4) = [12,4,2,15]; %Path 7
+pathInfo(8,1:4) = [18,8,6,21]; %Path 8
 
 
 
@@ -142,13 +142,29 @@ D(:,:)=round(D(:,:),2);
 
 %%
 %Finding schedules
-duration = scheduleFinderDec(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo);
-T;
-max(duration)
-mean(duration)
-duration2 = scheduleFinderCentralized(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo);
-T;
-duration2
+
+if CENTRALIZED
+    fprintf("CENTRALIZED SCHEDULING\n")
+    FIFO = false;
+    [duration2, output] = scheduleFinderCentralized(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo);
+    duration2 
+    
+else
+    fprintf("DECENTRALIZED SCHEDULING\n")
+    [duration,output] = scheduleFinderDec(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo);
+%T;
+    %max(duration)
+    mean(duration)
+end
+
+tfAvg = 0;
+for ii=1:totalVehicles
+    tfAvg = max(T(ii,:)) + tfAvg;
+end 
+tfAvg = tfAvg/totalVehicles;
+fprintf("The average travel time of all CAVs, %2.2f\n", tfAvg)
+%T;
+
 T(:,:)=round(T(:,:),2);
 
 %%

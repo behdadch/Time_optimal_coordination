@@ -1,4 +1,4 @@
-function [Schedule, computationTime, exitflag] = MILPDec(Tinitial,totalSegments,Release,Deadline,conflictInfoZoneInd,conflictInfoSchedule,conflictInfoRear,timeHeadway,varargin)
+function [Schedule, computationTime, exitflag,output] = MILPDec(Tinitial,totalSegments,Release,Deadline,conflictInfoZoneInd,conflictInfoSchedule,conflictInfoRear,timeHeadway,varargin)
 global FIFO
 switch nargin
     case 9
@@ -78,7 +78,7 @@ if ~FIFO
     end
 else
     %Set all the binary variables to zero 
-    fprintf("Following FIFO Structure\n")
+    %fprintf("Following FIFO Structure\n")
     for ii = 1:S
             AEQQ(ii,totalSegments+ ii) = 1;
             BEQQ(ii) = 0;

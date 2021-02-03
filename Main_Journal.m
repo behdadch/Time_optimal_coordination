@@ -20,9 +20,9 @@ global timeHeadway
 timeHeadway = 1.5;
 totalZones = 22; %Number of zones
 totalPath =  8;
-totalVehicles = 50; %Number of vehicles
+totalVehicles = 16; %Number of vehicles
 %%
-global FIFO 
+global FIFO
 
 ANIMATION = false;
 PLOT = false;
@@ -32,7 +32,8 @@ ANIMATIONPP = true;
 INPUT = false;
 CENTRALIZED = true;
 FIFO = false;
-if FIFO 
+UPPERLEVELTEST =false;
+if FIFO
     fprintf("Following FIFO Structure\n")
 end
 %%
@@ -49,7 +50,7 @@ if INPUT
 else
     
     if RANDOM
-        rng(7,'twister');
+        rng(8,'twister');
         TZeros = randomTimeGen(totalVehicles);
     else
         %%
@@ -142,28 +143,71 @@ D(:,:)=round(D(:,:),2);
 
 %%
 %Finding schedules
+%%
+if UPPERLEVELTEST    
+    %Decentralized
+    FIFO = false;
+    [durationDEC,output] = scheduleFinderDec(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo);
+    tfAvgDEC = 0;
+    for ii=1:totalVehicles
+        tfAvgDEC = max(T(ii,:)) - (T(ii,1)) + tfAvgDEC;
+    end
+    tfAvgDEC = tfAvgDEC/totalVehicles;
+    
+    
+    FIFO = true;
+    [durationFIFO,output] = scheduleFinderDec(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo);
+    tfAvgFIFO = 0;
+    for ii=1:totalVehicles
+        tfAvgFIFO = max(T(ii,:)) - (T(ii,1)) + tfAvgFIFO;
+    end
+    tfAvgFIFO = tfAvgFIFO/totalVehicles;
+    
+    
+    %%Centralized
+    FIFO = false;
+    [durationCEN, output] = scheduleFinderCentralized(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo);
+    tfAvgCEN = 0;
+    for ii=1:totalVehicles
+        tfAvgCEN = max(T(ii,:)) - (T(ii,1)) + tfAvgCEN;
+    end
+    tfAvgCEN = tfAvgCEN/totalVehicles;
+    
+    
+    fprintf("%2d, %2.4f, %2.4f, %2.4f, %2.4f, %2.4f, %2.4f \n ",totalVehicles, tfAvgDEC,tfAvgCEN,tfAvgFIFO, mean(durationDEC), durationCEN, mean(durationFIFO));
+    return
+end
+%%
+
+
 
 if CENTRALIZED
     fprintf("CENTRALIZED SCHEDULING\n")
     FIFO = false;
     [duration2, output] = scheduleFinderCentralized(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo);
-    duration2 
+    fprintf("Computation time: %2.5f \n",duration2);
     
 else
     fprintf("DECENTRALIZED SCHEDULING\n")
     [duration,output] = scheduleFinderDec(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo);
-%T;
+    %T;
     %max(duration)
-    mean(duration)
+    durAvg = mean(duration);
+    fprintf("Computation time: %2.5f \n",durAvg);
 end
 
 tfAvg = 0;
 for ii=1:totalVehicles
-    tfAvg = max(T(ii,:)) + tfAvg;
-end 
+    tfAvg = max(T(ii,:)) - (T(ii,1)) + tfAvg;
+end
 tfAvg = tfAvg/totalVehicles;
 fprintf("The average travel time of all CAVs, %2.2f\n", tfAvg)
 %T;
+
+
+
+
+
 
 T(:,:)=round(T(:,:),2);
 
@@ -206,7 +250,7 @@ for i = 1:totalVehicles
     solved(i).done = false;
 end
 while dt < 100000 && tx(end) < max(T(:))
-
+    
     dt = dt+1;
     if RESTART == true
         dt = 1;
@@ -220,7 +264,7 @@ while dt < 100000 && tx(end) < max(T(:))
         time = round(max((dt)*(0.01)),3);
     end
     tx(end+1)=time;
-    for i = 1:totalVehicles     
+    for i = 1:totalVehicles
         
         %Check the zone
         if tx(end)<= T(i,1)
@@ -334,7 +378,7 @@ while dt < 100000 && tx(end) < max(T(:))
                 RESTART = true;
                 break
             end
-        end     
+        end
         if length(x(i).Control)~= 0 && count(i)<2 && CONSTRAINT
             if x(i).Control(end)< u_min - 0.01
                 fprintf('CAV %d violated Umin again with %4.3f at time %4.2f \n',i,x(i).Control(end),time);
@@ -387,19 +431,19 @@ if PLOT
     %         'PaperPositionMode','auto');
     %%%%%%%%%%%%%%
     % figure(1)
-%     figure
-%     i =3;
-%     plot(tx(find(tx==TZeros(i)):(length(x(i).Control)+find(tx==TZeros(i))-1)),x(i).Control(:),'k','LineWidth',1.2)
-%     hold on
-%     ylim = get(gca,'ylim');
-%     tPl = T(i,:);
-%     tPl = tPl(1:find(tPl == max(tPl)));
-%     for i=1:length(tPl)
-%         plot([tPl(i),tPl(i)],ylim,'--r')
-%     end
-%     xlabel('time')
-%     ylabel('Control')
-%     grid on
+    %     figure
+    %     i =3;
+    %     plot(tx(find(tx==TZeros(i)):(length(x(i).Control)+find(tx==TZeros(i))-1)),x(i).Control(:),'k','LineWidth',1.2)
+    %     hold on
+    %     ylim = get(gca,'ylim');
+    %     tPl = T(i,:);
+    %     tPl = tPl(1:find(tPl == max(tPl)));
+    %     for i=1:length(tPl)
+    %         plot([tPl(i),tPl(i)],ylim,'--r')
+    %     end
+    %     xlabel('time')
+    %     ylabel('Control')
+    %     grid on
     %%%%%%%%%%%%%%%%%
     %     figure(1);
     %     for i=13:16%totalVehicles
@@ -436,11 +480,11 @@ if PLOT
         title(['Path',num2str(path(i))]);
         hold on
     end
-
-     figure(3)
-     for i=1:totalVehicles
+    
+    figure(3)
+    for i=1:totalVehicles
         figure
-         %subplot(4,1,path(i))
+        %subplot(4,1,path(i))
         plot(tx(find(tx==TZeros(i)):(length(x(i).Velocity)+find(tx==TZeros(i))-1)),x(i).Velocity(:));
         %title(['Path',num2str(path(i))]);
         title(['CAV',num2str(i)]);

@@ -61,6 +61,7 @@ for i=1:totalVehicles
     while  exitflag == -2 && vMerge(i)> v_min
         fprintf('Decreasing vmerge speed from %4.2f to %4.2f for CAV: %d \n',vMerge(i),vMerge(i)-0.1,i);
         vMerge(i) = vMerge(i) - 0.1;
+        %T(i,1) = T(i,1)+0.5;
         %v_min = 0.1;
         %v_out = v_out + 0.1;
         ReleaseDeadlineFinder(path,pathInfo,totalVehicles,zoneInfo);

@@ -9,7 +9,7 @@ end
 solver = "IBMCPLEX";
 options = optimoptions('intlinprog','Display','off');
 %shcedule is a vector;
-M = 100;% this is a big number for the big M method to handle disjunctive (OR) constraints
+M = 5000;% this is a big number for the big M method to handle disjunctive (OR) constraints
 S = length(conflictInfoZoneInd);%create a binary variable for each safety constraint
 f = [zeros(1,totalSegments-1)';1;zeros(1,S)'];%function that we try to minimize which is exit time from CZ; the last S variables are augmented binary variables
 intcon = totalSegments+1:1:length(f);%all binary variables

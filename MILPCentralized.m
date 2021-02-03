@@ -2,7 +2,7 @@ function [Schedule, computationTime, exitflag,output] = MILPCentralized(Tinitial
 
 %% Initialization
 solver = "IBMCPLEX";
-M = 100;% this is a big number for the big M method to handle disjunctive (OR) constraints
+M = 5000;% this is a big number for the big M method to handle disjunctive (OR) constraints
 f = [];
 constrNum =0;
 intcon = [];

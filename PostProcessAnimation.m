@@ -6,11 +6,11 @@ global intersectionDistance
 global mergeLength
 
 %%
-gamma = 5;
-phi = 0.2;
+gamma = 4;
+phi = 0.1;
 %%
 
-timeStep = 0.5; %% change the speed of animation
+timeStep = 0.1; %% change the speed of animation
 flow_title = [];
 horizon = max(vehiclesSchedules(:));
 switch  nargin
@@ -34,7 +34,7 @@ timetext=text(xlim(2)-500,ylim(2),flow_title+" [veh/h]");
 
 time = 0:timeStep:horizon;
 frame = 0;
-col = {[0, 0, 1],[1, 0, 0],[0, 0.75, 0.75],[0.75, 0, 0.75],[0.25, 0.25, 0.25],[0.9290, 0.6940, 0.1250]	...
+col = {[0, 0, 1],[1, 0, 0],[0, 0.75, 0.75],[0.75, 0, 0.75],[0.4, 0.4, 0.4],[0.9290, 0.6940, 0.1250]	...
     ,[0/255 204/255 55/255],[1 1 1]	};
 
 for t = time

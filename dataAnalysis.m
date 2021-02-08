@@ -1,11 +1,11 @@
 clc
 clear
- HIST = false;
+ HIST = true;
 %%
-importedDataBL = importdata("C:\Users\Behdad\Dropbox\Publications\TITS-Results\double intersection\Data\Seed42\Baseline-output-400-15m-30s.csv");
+importedDataBL = importdata("C:\Users\Behdad\Dropbox\Publications\TITS-Results\double intersection\Data-Rev\Seed42\Baseline-output-1200-15m-30s.csv");
 DataBl  = importedDataBL.data;
 
-DataCAV = load('E:\matlab_workspace\SchedulingSimulation\IEEETransactionOnIntelligent\Seed42\FIFO\traj_optimal_400_seed42_FIFO.mat');
+DataCAV = load('E:\matlab_workspace\SchedulingSimulation\IEEETransactionOnIntelligent\Seed42\traj_optimal_1200_15ms_15.mat');
 CAV = DataCAV.x;
 
 
@@ -147,13 +147,14 @@ h2 = histogram(mean_velocity_CAV,'NumBins',4,'Normalization','probability');
 h2.FaceColor = [50,229,229]/255;
 h2.BinWidth = 2;
 yticklabels(yticks*100)
+xticks(4:2:24)
 
 
 xlabel('Mean Speed (m/s)')
 ylabel('Percentage (%)')
 legend('Baseline','Optimal')
 print -dpng flow1200-meanspeedHis.png
-
+print -depsc2 flow1200-meanspeedHis.eps
 
 
 %%
@@ -168,12 +169,15 @@ h2 = histogram(travel_time_CAV,'NumBins',4,'Normalization','probability');
 h2.FaceColor = [50,229,229]/255;
 h2.BinWidth = 10;
 yticklabels(yticks*100)
+xticks(20:10:130)
 
 xlabel('Travel Time (s)')
 ylabel('Percentage (%)')
 legend('Baseline','Optimal')
 
 print -dpng flow1200-TravelTimeHis.png
+print -depsc2 flow1200-TravelTimeHis.eps
+
 end
 %
 % box on

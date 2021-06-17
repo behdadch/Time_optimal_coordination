@@ -31,7 +31,7 @@ for i=1:totalVehicles
             if (indicesA(1) == indicesA(2)-1)
                 %TODO: REAR-END
                 rear = kk+zeros(1,nnz(indicesA));
-                if(length(rear) ==length(pathii)-1)
+                if(length(rear) ==length(pathii)-1) || (pathii(1)==pathKK(1))
                     rear= -rear; %% this means that CAV i and kk are in the same path and CAV i can not reach the end sooner than CAV kk --> therefore B_i = 0(refer to paper)
                 end 
             else

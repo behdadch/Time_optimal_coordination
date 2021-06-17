@@ -33,15 +33,29 @@ elseif (PathNumber==7)
     distance = [0,L,L+0.5*S,L+S,2*L+S];
 elseif (PathNumber==8)
     distance = [0,L,L+0.5*S,L+S,2*L+S];
-    
-    
-    
+elseif (PathNumber==9)
+    distance = [0,L,L+0.5*S,L+S,L+1.5*S,2*L+1.5*S];    
+elseif (PathNumber==10)
+    distance = [0,L,L+0.5*S,2*L+0.5*S];   
+elseif (PathNumber==11)
+    distance = [0, L, L+0.5*S, L+S, L+S+D, L+D+1.5*S, L+D+2*S, L+D+2.5*S, 2*L+D+2.5*S];      
+elseif (PathNumber==12)
+    distance = [0, L, L+0.5*S, L+S, L+S+D, L+D+1.5*S, 2*L+D+1.5*S];
+elseif (PathNumber==13)
+    distance = [0, L, L+0.5*S, L+0.5*S+D, L+D+S, L+D+1.5*S, L+D+2*S, 2*L+D+2*S];
+elseif (PathNumber==14)
+    distance = [0, L, L+0.5*S, L+0.5*S+D, L+D+S, 2*L+D+S];
+elseif (PathNumber==15)
+    distance = [0, L, L+0.5*S, L+S, L+1.5*S, 2*L+1.5*S];
+elseif (PathNumber==16)
+    distance = [0, L, L+0.5*S, L+D+0.5*S, L+D+S, L+D+1.5*S, 2*L+D+1.5*S];
+elseif (PathNumber==17)
+    distance = [0, L, L+0.5*S, L+0.5*S+D, L+D+S, 2*L+D+S];
+elseif (PathNumber==18)
+    distance = [0, L, L+0.5*S, L+0.5*S+D, L+D+S, L+D+1.5*S, L+D+2*S, 2*L+D+2*S];
+elseif (PathNumber==19)
+    distance = [0, L, L+0.5*S, L+S, L+1.5*S, 2*L+1.5*S];
 end
-%pathInfo(5,1:7) = [20,6,5,14,2,1,9]; %Path 5
-%pathInfo(6,1:4) = [16,1,3,11]; %Path 6
-%pathInfo(7,1:7) = [18,8,6,21]; %Path 7
-%pathInfo(8,1:4) = [12,4,2,15]; %Path 8
-
 
 
 pStart = distance(i);

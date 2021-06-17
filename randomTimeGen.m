@@ -1,4 +1,4 @@
-function timeArray = randomTimeGen(number,seed)
+function timeArray = randomTimeGen(number)
 time_step = 0.1;
 tt =105;
 finalRelease = 100; %no vehicle be release after this

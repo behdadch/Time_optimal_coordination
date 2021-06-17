@@ -19,8 +19,8 @@ global timeHeadway
 
 timeHeadway = 1.5;
 totalZones = 22; %Number of zones
-totalPath =  8;
-totalVehicles = 16; %Number of vehicles
+totalPath =  19;
+totalVehicles = 1; %Number of vehicles
 %%
 global FIFO
 
@@ -29,8 +29,9 @@ PLOT = false;
 RANDOM = true;
 CONSTRAINT = true;
 ANIMATIONPP = true;
+SAVEVIDEO = false;
 INPUT = false;
-CENTRALIZED = true;
+CENTRALIZED = false;
 FIFO = false;
 UPPERLEVELTEST =false;
 if FIFO
@@ -38,7 +39,7 @@ if FIFO
 end
 %%
 if INPUT
-    importedData = importdata("C:\Users\Behdad\Dropbox\Publications\TITS-Results\double intersection\Data\Seed1\Baseline-Input-800-15m-30s.csv");
+    importedData = importdata("C:\Users\Behdad\Dropbox\Publications\TITS-Results\double intersection\Data\Seed1\Baseline-Input-400-15m-30s.csv");
     data = importedData.data;
     for i=1:length(data)
         index = find(data(:,2)==i);
@@ -48,9 +49,8 @@ if INPUT
     totalVehicles = length(data);
     RANDOM = false; %this is to make sure we do not use RANDOM by mistake
 else
-    
     if RANDOM
-        rng(8,'twister');
+        rng(15,'twister');
         TZeros = randomTimeGen(totalVehicles);
     else
         %%
@@ -60,14 +60,18 @@ else
     end
     %in pathInfo(i,j)-> i is vehicle index after order calculation and the j shows the
     % zone that vehicle is in that.
-    
+    pathSequence = [1,5,4,6,3,2,16,8,9,7,17,10,13,18,11,14,12,15];
     for i = 1:totalVehicles
-        path(i) = mod(i,totalPath);
-        if path(i) == 0
-            path(i) = totalPath;
+        indP = mod(i,totalPath);
+        if indP == 0
+            indP = totalPath;
         end
+        path(i) = pathSequence(indP);
+
     end
 end
+% %%
+ 
 %%
 
 
@@ -117,18 +121,52 @@ zoneInfo(13).length = intersectionDistance;
 zoneInfo(14).length = intersectionDistance;
 
 %%
-
+ path(1) = 19;
+% path(2) = 15;
+% TZeros = [0,1];
 %%
 
 %Defining Path
-pathInfo(1,1:4) = [22,5,7,17];  %Path 1
-pathInfo(2,1:6) = [12,4,13,7,8,19]; %Path 2
-pathInfo(3,1:7) = [10,3,4,13,7,8,19]; %Path 3
-pathInfo(4,1:9) = [18,8,6,5,14,2,1,3,11];  %Path 4
-pathInfo(5,1:7) = [20,6,5,14,2,1,9]; %Path 5
-pathInfo(6,1:4) = [16,1,3,11]; %Path 6
-pathInfo(7,1:4) = [12,4,2,15]; %Path 7
-pathInfo(8,1:4) = [18,8,6,21]; %Path 8
+
+
+%Origin = NB2
+pathInfo(1,1:4) = [22,5,7,17];  %NB2 to SB2
+pathInfo(16,1:6)=[22,5,14,2,1,9]; %NB2 to WB
+pathInfo(17,1:5)=[22,5,14,2,15]; %NB2 to NB1
+pathInfo(18,1:7)=[22,5,14,2,1,3,11]; %NB2 to SB1
+pathInfo(19,1:5)=[22,5,7,8,19]; %NB2 to EB
+
+
+%Origin = EB
+pathInfo(5,1:7) = [20,6,5,14,2,1,9]; %EB to WB
+
+%Origin = SB2
+pathInfo(4,1:9) = [18,8,6,5,14,2,1,3,11];  %SB2 to SB1
+pathInfo(8,1:4) = [18,8,6,21]; %SB2 to NB2
+
+
+%Origin = NB1
+pathInfo(6,1:4) = [16,1,3,11]; %NB1 to SB1
+
+
+%Origin = WB
+pathInfo(3,1:7) = [10,3,4,13,7,8,19]; %WB to EB
+pathInfo(9,1:5) = [10,3,4,2,15]; % WB to NB1
+pathInfo(10,1:3) = [10,3,11]; % WB to SB1
+pathInfo(11,1:8) = [10,3,4,13,7,8,6,21]; % WB to NB2
+pathInfo(12,1:6) = [10,3,4,13,7,17]; % WB to SB2
+
+
+%Origin = SB1
+pathInfo(2,1:6) = [12,4,13,7,8,19]; %SB1 to EB
+pathInfo(7,1:4) = [12,4,2,15]; %SB1 to NB1
+pathInfo(13,1:7)=[12,4,13,7,8,6,21]; %SB1 to NB2
+pathInfo(14,1:5)=[12,4,13,7,17]; %SB1 to SB2
+pathInfo(15,1:5)=[12,4,2,1,9]; %SB1 to WB1
+
+
+%%%
+
 
 
 
@@ -144,7 +182,7 @@ D(:,:)=round(D(:,:),2);
 %%
 %Finding schedules
 %%
-if UPPERLEVELTEST    
+if UPPERLEVELTEST 
     %Decentralized
     FIFO = false;
     [durationDEC,output] = scheduleFinderDec(path,pathInfo,totalVehicles,timeHeadway,TZeros,zoneInfo);
@@ -152,6 +190,7 @@ if UPPERLEVELTEST
     for ii=1:totalVehicles
         tfAvgDEC = max(T(ii,:)) - (T(ii,1)) + tfAvgDEC;
     end
+    tfAvgDEC
     tfAvgDEC = tfAvgDEC/totalVehicles;
     
     
@@ -171,7 +210,9 @@ if UPPERLEVELTEST
     for ii=1:totalVehicles
         tfAvgCEN = max(T(ii,:)) - (T(ii,1)) + tfAvgCEN;
     end
-    tfAvgCEN = tfAvgCEN/totalVehicles;
+    tfAvgCEN
+    
+    tfAvgCEN = tfAvgCEN/totalVehicles
     
     
     fprintf("%2d, %2.4f, %2.4f, %2.4f, %2.4f, %2.4f, %2.4f \n ",totalVehicles, tfAvgDEC,tfAvgCEN,tfAvgFIFO, mean(durationDEC), durationCEN, mean(durationFIFO));
@@ -506,6 +547,7 @@ end
 %%
 if ANIMATIONPP
     M = PostProcessAnimation(x,T,path);
+    if(SAVEVIDEO)
     date = datetime;
     date.Format = 'MMMM-d-yyyy-HH-mm-ss';
     name = string(date);
@@ -515,6 +557,7 @@ if ANIMATIONPP
     writeVideo(newVid,M);
     pause(1);
     close(newVid)
+    end
 end
 
 

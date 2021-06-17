@@ -24,35 +24,38 @@ for i=1:totalVehicles
         indicesA = indicesA(indicesA>1)';
         indicesB = indicesB(indicesB>1)';
         if (length(indicesA)>1)
-            %There are two zones which are common between CAV i and kk
+            %Neglecting the first zone, there are at least two zones which are common between CAV i and kk
             %% now we need to check if theses two zones are after each other, if so --> rear-end will happen, so all these
             %zones should share the same binary variable
             if (indicesA(1) == indicesA(2)-1)
                 %TODO: REAR-END
                 rear = kk+zeros(1,nnz(indicesA));
-                if(length(rear) ==length(pathii)-1)
-                    rear= -rear; %% this means that CAV i and kk are in the same path and CAV i can not reach the end sooner than CAV kk --> therefore B_i = 0(refer to paper)
+                if(length(rear) ==length(pathii)-1)|| (pathii(1)==pathKK(1))
+                    %% this means that CAV i and kk are in the same path and CAV i can not reach the end sooner than CAV kk --> therefore B_i = 0(refer to paper)
+                    %% The second part is that if two CAVs start at same path and travel on more than one zone together and then separate
+                    rear= -rear; 
                 end
             else
                 rear = zeros(1,nnz(indicesA));
             end
             
-        elseif pathii(1)==pathKK(1) %they start on the same segment and then merge out
+        elseif pathii(1)==pathKK(1) %they start on the same segment and then merge out after the first zone
             rear= -kk;
         else
             rear = 0;
         end
-        
         ConflictInfo.zoneInd = [ConflictInfo.zoneInd, indicesA];
         ConflictInfo.schedule = [ConflictInfo.schedule, T(kk,indicesB)];
         ConflictInfo.rear = [ConflictInfo.rear,rear];
         
+
     end
     %MILP should be solved
-    %     if i ==7
-    %         ConflictInfo.rear
-    %         ConflictInfo.zoneInd
-    %     end
+%          if i ==2
+%              pathii
+%              ConflictInfo.rear
+%              ConflictInfo.zoneInd
+%          end
     %%
     zoneInd = ConflictInfo.zoneInd;
     schedule = ConflictInfo.schedule;

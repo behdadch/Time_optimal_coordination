@@ -55,6 +55,28 @@ elseif (PathNumber==18)
     distance = [0, L, L+0.5*S, L+0.5*S+D, L+D+S, L+D+1.5*S, L+D+2*S, 2*L+D+2*S];
 elseif (PathNumber==19)
     distance = [0, L, L+0.5*S, L+S, L+1.5*S, 2*L+1.5*S];
+elseif (PathNumber==20)
+    distance = [0, L, L+0.5*S, L+S, L+S+D, L+D+1.5*S, L+D+2*S, L+D+2.5*S, 2*L+D+2.5*S];    
+elseif (PathNumber==21)    
+    distance = [0, L, L+0.5*S, L+S, L+S+D, L+D+1.5*S, 2*L+D+1.5*S];
+elseif (PathNumber==22)    
+    distance = [0, L, L+0.5*S, L+S, L+1.5*S, 2*L+1.5*S];
+elseif (PathNumber==23)
+    distance = [0,L,L+0.5*S,2*L+0.5*S];
+elseif (PathNumber==24)
+    distance = [0, L, L+0.5*S, L+S, L+1.5*S, L+1.5*S+D, L+2*S+D, 2*L+2*S+D];
+elseif (PathNumber==25)
+    distance = [0, L, L+0.5*S, L+S, L+1.5*S, L+1.5*S+D, L+2*S+D, L+2.5*S+D 2*L+2*S+D];
+elseif (PathNumber==26)
+    distance = [0,L,L+0.5*S,2*L+0.5*S];
+elseif (PathNumber==27)
+    distance = [0, L, L+S/2, L+S, L+(3*S)/2, L+D+(3*S)/2, L+D+(4*S)/2, L+D+(5*S)/2, D+L+3*S, 2*L+D+3*S];
+elseif (PathNumber==28)
+    distance = [0, L, L+S/2, L+S, L+(3*S)/2, L+D+(3*S)/2, L+D+(4*S)/2, 2*L+D+2*S];
+elseif (PathNumber==29)
+    distance = [0, L, L+S/2, L+S, L+(3*S)/2, L+D+(3*S)/2, L+D+(4*S)/2,  L+D+2.5*S, 2*L+D+2*S];
+elseif (PathNumber==30)
+    distance = [0,L,L+0.5*S,2*L+0.5*S];    
 end
 
 

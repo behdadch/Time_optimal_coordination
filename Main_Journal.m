@@ -19,7 +19,8 @@ global timeHeadway
 
 timeHeadway = 1.5;
 totalZones = 22; %Number of zones
-totalPath =  19;
+
+totalPath =  27;
 totalVehicles = 1; %Number of vehicles
 %%
 global FIFO
@@ -121,7 +122,7 @@ zoneInfo(13).length = intersectionDistance;
 zoneInfo(14).length = intersectionDistance;
 
 %%
- path(1) = 19;
+ path(1) = 30;
 % path(2) = 15;
 % TZeros = [0,1];
 %%
@@ -139,15 +140,24 @@ pathInfo(19,1:5)=[22,5,7,8,19]; %NB2 to EB
 
 %Origin = EB
 pathInfo(5,1:7) = [20,6,5,14,2,1,9]; %EB to WB
+pathInfo(20,1:8) = [20,6,5,14,2,1,3,11]; %EB to SB1
+pathInfo(21,1:6) = [20,6,5,14,2,15]; %EB to NB1
+pathInfo(22,1:5) = [20,6,5,7,17]; %EB to SB2
+pathInfo(23,1:3) = [20,6,21]; %EB to NB2
 
 %Origin = SB2
 pathInfo(4,1:9) = [18,8,6,5,14,2,1,3,11];  %SB2 to SB1
 pathInfo(8,1:4) = [18,8,6,21]; %SB2 to NB2
-
+pathInfo(24,1:7) = [18,8,6,5,14,2,15];  %SB2 to NB1
+pathInfo(25,1:8) = [18,8,6,5,14,2,1,9];  %SB2 to WB
+pathInfo(26,1:3) = [18,8,19];  %SB2 to EB
 
 %Origin = NB1
 pathInfo(6,1:4) = [16,1,3,11]; %NB1 to SB1
-
+pathInfo(27,1:9) = [16,1,3,4,13,7,8,6,21]; %NB1 to NB2
+pathInfo(28,1:7) = [16,1,3,4,13,7,17]; %NB1 to NB2
+pathInfo(29,1:8) = [16,1,3,4,13,7,8,19]; %NB1 to EB
+pathInfo(30,1:3) = [16,1,9]; %NB1 to WB
 
 %Origin = WB
 pathInfo(3,1:7) = [10,3,4,13,7,8,19]; %WB to EB
@@ -162,14 +172,7 @@ pathInfo(2,1:6) = [12,4,13,7,8,19]; %SB1 to EB
 pathInfo(7,1:4) = [12,4,2,15]; %SB1 to NB1
 pathInfo(13,1:7)=[12,4,13,7,8,6,21]; %SB1 to NB2
 pathInfo(14,1:5)=[12,4,13,7,17]; %SB1 to SB2
-pathInfo(15,1:5)=[12,4,2,1,9]; %SB1 to WB1
-
-
-%%%
-
-
-
-
+pathInfo(15,1:5)=[12,4,2,1,9]; %SB1 to WB
 
 %Creation  of conflict Set
 conflictFinder(path,pathInfo,totalVehicles);

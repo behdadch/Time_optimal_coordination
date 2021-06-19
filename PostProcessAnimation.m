@@ -268,7 +268,150 @@ for t = time
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
             c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            hold on; 
+        elseif PathNumber == 20
+            if xpos < roadLength+intersectionDistance+7*mergeLength/4
+                xx(i) = 2*roadLength + intersectionDistance + 2*mergeLength - xpos;
+                yy(i) = roadLength+3*mergeLength/4;
+            else
+                xx(i) = roadLength+mergeLength/4;
+                yy(i) =  -(xpos-(roadLength+intersectionDistance+7*mergeLength/4))+roadLength+3*mergeLength/4;
+            end
+            hh(i) = plot(xx(i),yy(i),'.m');
+            HD(i) = gamma + vpos*phi;
+            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            hold on;
+        elseif PathNumber == 21
+            if xpos < roadLength+intersectionDistance+5*mergeLength/4
+                xx(i) = 2*roadLength + intersectionDistance + 2*mergeLength - xpos;
+                yy(i) = roadLength+3*mergeLength/4;
+            else
+                xx(i) = roadLength+3*mergeLength/4;
+                yy(i) =  (xpos-(roadLength+intersectionDistance+5*mergeLength/4))+roadLength+3*mergeLength/4;
+            end
+            hh(i) = plot(xx(i),yy(i),'.m');
+            HD(i) = gamma + vpos*phi;
+            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            hold on;
+        elseif PathNumber == 22
+            if xpos < roadLength+3*mergeLength/4
+                xx(i) = 2*roadLength + intersectionDistance + 2*mergeLength - xpos;
+                yy(i) = roadLength+3*mergeLength/4;
+            else
+                xx(i) = roadLength + intersectionDistance + 5*mergeLength/4;
+                yy(i) =  -(xpos-(roadLength+3*mergeLength/4))+roadLength+3*mergeLength/4;
+            end
+            hh(i) = plot(xx(i),yy(i),'.m');
+            HD(i) = gamma + vpos*phi;
+            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            hold on;
+        elseif PathNumber == 23
+            if xpos < roadLength+mergeLength/4
+                xx(i) = 2*roadLength + intersectionDistance + 2*mergeLength - xpos;
+                yy(i) = roadLength+3*mergeLength/4;
+            else
+                xx(i) = roadLength + intersectionDistance + 7*mergeLength/4;
+                yy(i) =  (xpos-(roadLength+mergeLength/4))+roadLength+3*mergeLength/4;
+            end
+            hh(i) = plot(xx(i),yy(i),'.m');
+            HD(i) = gamma + vpos*phi;
+            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            hold on;
+        elseif PathNumber == 24
+            if xpos< roadLength+3*mergeLength/4
+                xx(i) = intersectionDistance+roadLength+7*mergeLength/4;
+                yy(i) = xpos;
+            elseif xpos< intersectionDistance+roadLength+7*mergeLength/4
+                xx(i) = -(xpos-(roadLength+3*mergeLength/4))+intersectionDistance+roadLength+7*mergeLength/4;
+                yy(i) = roadLength+3*mergeLength/4;
+            else
+                xx(i) =  roadLength+3*mergeLength/4;
+                yy(i) = (xpos-(intersectionDistance+roadLength+7*mergeLength/4))+(roadLength+3*mergeLength/4);
+            end
+            hh(i) = plot(xx(i),yy(i),'.b');
+            HD(i) = gamma + vpos*phi;
+            c(i) = circle(xx(i),yy(i),HD(i),col{4});
+            hold on            
+        elseif PathNumber == 25
+            if xpos< roadLength+3*mergeLength/4
+                xx(i) = intersectionDistance+roadLength+7*mergeLength/4;
+                yy(i) = xpos;
+            else
+                xx(i) = -(xpos-(roadLength+3*mergeLength/4))+intersectionDistance+roadLength+7*mergeLength/4;
+                yy(i) = roadLength+3*mergeLength/4;
+            end
+            hh(i) = plot(xx(i),yy(i),'.b');
+            HD(i) = gamma + vpos*phi;
+            c(i) = circle(xx(i),yy(i),HD(i),col{4});
+            hold on
+        elseif PathNumber == 26
+            if xpos< roadLength+mergeLength/4
+                xx(i) = intersectionDistance+roadLength+7*mergeLength/4;
+                yy(i) = xpos;
+            else
+                xx(i) = (xpos-(roadLength+mergeLength/4))+intersectionDistance+roadLength+7*mergeLength/4;
+                yy(i) = roadLength+mergeLength/4;
+            end
+            hh(i) = plot(xx(i),yy(i),'.b');
+            HD(i) = gamma + vpos*phi;
+            c(i) = circle(xx(i),yy(i),HD(i),col{4});
+            hold on 
+        elseif PathNumber == 27
+            if xpos < roadLength+3* mergeLength/4
+                xx(i) = roadLength+mergeLength/4;
+                yy(i) = 2*roadLength+mergeLength - xpos;
+            elseif xpos < roadLength+intersectionDistance+9* mergeLength/4
+                xx(i) = xpos-(roadLength+3* mergeLength/4)+roadLength+mergeLength/4;
+                yy(i) = roadLength+mergeLength/4;
+            else 
+                xx(i) = roadLength+intersectionDistance+7* mergeLength/4;
+                yy(i) = xpos-(roadLength+intersectionDistance+9* mergeLength/4)+roadLength+mergeLength/4;
+            end 
+            hh(i) = plot(xx(i),yy(i),'.m');
+            HD(i) = gamma + vpos*phi;
+            c(i) = circle(xx(i),yy(i),HD(i),col{6});
+            hold on;
+        elseif PathNumber == 28
+            if xpos < roadLength+3* mergeLength/4
+                xx(i) = roadLength+mergeLength/4;
+                yy(i) = 2*roadLength+mergeLength - xpos;
+            elseif xpos < roadLength+intersectionDistance+7* mergeLength/4
+                xx(i) = xpos-(roadLength+3* mergeLength/4)+roadLength+mergeLength/4;
+                yy(i) = roadLength+mergeLength/4;
+            else 
+                xx(i) = roadLength+intersectionDistance+5* mergeLength/4;
+                yy(i) = -(xpos-(roadLength+intersectionDistance+7* mergeLength/4))+roadLength+mergeLength/4;
+            end 
+            hh(i) = plot(xx(i),yy(i),'.m');
+            HD(i) = gamma + vpos*phi;
+            c(i) = circle(xx(i),yy(i),HD(i),col{6});
+            hold on;
+        elseif PathNumber == 29
+            if xpos < roadLength+3* mergeLength/4
+                xx(i) = roadLength+mergeLength/4;
+                yy(i) = 2*roadLength+mergeLength - xpos;
+            else
+                xx(i) = xpos-(roadLength+3* mergeLength/4)+roadLength+mergeLength/4;
+                yy(i) = roadLength+mergeLength/4;
+            end 
+            hh(i) = plot(xx(i),yy(i),'.m');
+            HD(i) = gamma + vpos*phi;
+            c(i) = circle(xx(i),yy(i),HD(i),col{6});
+            hold on;
+        elseif PathNumber == 30
+            if xpos < roadLength+mergeLength/4
+                xx(i) = roadLength+mergeLength/4;
+                yy(i) = 2*roadLength+mergeLength - xpos;
+            else
+                xx(i) = -(xpos-(roadLength+mergeLength/4))+roadLength+mergeLength/4;
+                yy(i) = roadLength+3*mergeLength/4;
+            end 
+            hh(i) = plot(xx(i),yy(i),'.m');
+            HD(i) = gamma + vpos*phi;
+            c(i) = circle(xx(i),yy(i),HD(i),col{6});
             hold on;             
+            
+            
         end
     end
     

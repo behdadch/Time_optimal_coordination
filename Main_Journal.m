@@ -20,8 +20,8 @@ global timeHeadway
 timeHeadway = 1.5;
 totalZones = 22; %Number of zones
 
-totalPath =  27;
-totalVehicles = 1; %Number of vehicles
+totalPath =  30;
+totalVehicles = 90; %Number of vehicles
 %%
 global FIFO
 
@@ -29,12 +29,12 @@ ANIMATION = false;
 PLOT = false;
 RANDOM = true;
 CONSTRAINT = true;
-ANIMATIONPP = true;
+ANIMATIONPP = false;
 SAVEVIDEO = false;
 INPUT = false;
 CENTRALIZED = false;
 FIFO = false;
-UPPERLEVELTEST =false;
+UPPERLEVELTEST =true;
 if FIFO
     fprintf("Following FIFO Structure\n")
 end
@@ -61,7 +61,7 @@ else
     end
     %in pathInfo(i,j)-> i is vehicle index after order calculation and the j shows the
     % zone that vehicle is in that.
-    pathSequence = [1,5,4,6,3,2,16,8,9,7,17,10,13,18,11,14,12,15];
+    pathSequence = [1,5,3,4,6,2, 16,20,9,8,27,7, 17,21,10,24,28,13, 18,22,11,25,29,14, 19,23,12,26,30,15];
     for i = 1:totalVehicles
         indP = mod(i,totalPath);
         if indP == 0
@@ -122,7 +122,7 @@ zoneInfo(13).length = intersectionDistance;
 zoneInfo(14).length = intersectionDistance;
 
 %%
- path(1) = 30;
+ %path(1) = 30;
 % path(2) = 15;
 % TZeros = [0,1];
 %%
@@ -145,6 +145,14 @@ pathInfo(21,1:6) = [20,6,5,14,2,15]; %EB to NB1
 pathInfo(22,1:5) = [20,6,5,7,17]; %EB to SB2
 pathInfo(23,1:3) = [20,6,21]; %EB to NB2
 
+%Origin = WB
+pathInfo(3,1:7) = [10,3,4,13,7,8,19]; %WB to EB
+pathInfo(9,1:5) = [10,3,4,2,15]; % WB to NB1
+pathInfo(10,1:3) = [10,3,11]; % WB to SB1
+pathInfo(11,1:8) = [10,3,4,13,7,8,6,21]; % WB to NB2
+pathInfo(12,1:6) = [10,3,4,13,7,17]; % WB to SB2
+
+
 %Origin = SB2
 pathInfo(4,1:9) = [18,8,6,5,14,2,1,3,11];  %SB2 to SB1
 pathInfo(8,1:4) = [18,8,6,21]; %SB2 to NB2
@@ -158,14 +166,6 @@ pathInfo(27,1:9) = [16,1,3,4,13,7,8,6,21]; %NB1 to NB2
 pathInfo(28,1:7) = [16,1,3,4,13,7,17]; %NB1 to NB2
 pathInfo(29,1:8) = [16,1,3,4,13,7,8,19]; %NB1 to EB
 pathInfo(30,1:3) = [16,1,9]; %NB1 to WB
-
-%Origin = WB
-pathInfo(3,1:7) = [10,3,4,13,7,8,19]; %WB to EB
-pathInfo(9,1:5) = [10,3,4,2,15]; % WB to NB1
-pathInfo(10,1:3) = [10,3,11]; % WB to SB1
-pathInfo(11,1:8) = [10,3,4,13,7,8,6,21]; % WB to NB2
-pathInfo(12,1:6) = [10,3,4,13,7,17]; % WB to SB2
-
 
 %Origin = SB1
 pathInfo(2,1:6) = [12,4,13,7,8,19]; %SB1 to EB
@@ -193,7 +193,6 @@ if UPPERLEVELTEST
     for ii=1:totalVehicles
         tfAvgDEC = max(T(ii,:)) - (T(ii,1)) + tfAvgDEC;
     end
-    tfAvgDEC
     tfAvgDEC = tfAvgDEC/totalVehicles;
     
     
@@ -212,10 +211,8 @@ if UPPERLEVELTEST
     tfAvgCEN = 0;
     for ii=1:totalVehicles
         tfAvgCEN = max(T(ii,:)) - (T(ii,1)) + tfAvgCEN;
-    end
-    tfAvgCEN
-    
-    tfAvgCEN = tfAvgCEN/totalVehicles
+    end    
+    tfAvgCEN = tfAvgCEN/totalVehicles;
     
     
     fprintf("%2d, %2.4f, %2.4f, %2.4f, %2.4f, %2.4f, %2.4f \n ",totalVehicles, tfAvgDEC,tfAvgCEN,tfAvgFIFO, mean(durationDEC), durationCEN, mean(durationFIFO));

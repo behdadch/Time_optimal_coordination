@@ -25,17 +25,17 @@ plot(t1,y1,'-k','LineWidth',2);
 hold on 
 plot(t1,y2,'-k','LineWidth',2);
 hold on 
-plot(t1,ym,'--y','LineWidth',2);
+plot(t1,ym,'--y','LineWidth',1);
 hold on 
 plot (x1,t2,'-k','LineWidth',2);
 hold on 
-plot (x1m,t2,'--y','LineWidth',2);
+plot (x1m,t2,'--y','LineWidth',1);
 hold on 
 plot (x2,t2,'-k','LineWidth',2);
 hold on 
 plot (x3,t2,'-k','LineWidth',2);
 hold on 
-plot (x3m,t2,'--y','LineWidth',2);
+plot (x3m,t2,'--y','LineWidth',1);
 hold on 
 plot (x4,t2,'-k','LineWidth',2);
 hold on 

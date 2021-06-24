@@ -1,7 +1,7 @@
 function timeArray = randomTimeGen(number)
 time_step = 0.1;
-tt =105;
-finalRelease = 100; %no vehicle be release after this
+tt =125;
+finalRelease = 120; %no vehicle be release after this
 while(max(tt)> finalRelease) %%
 mu=1;%mean of the random number %the rate for the poisson distribution
 expRnd = exprnd(mu,1,number); % generate an array (1Xnumber) of random number from exp distribution with 

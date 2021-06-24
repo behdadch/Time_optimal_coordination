@@ -10,7 +10,7 @@ gamma = 4;
 phi = 0.1;
 %%
 
-timeStep = 0.5; %% change the speed of animation
+timeStep = 0.1; %% change the speed of animation
 flow_title = [];
 horizon = max(vehiclesSchedules(:));
 switch  nargin
@@ -34,7 +34,7 @@ timetext=text(xlim(2)-500,ylim(2),flow_title+" [veh/h]");
 
 time = 0:timeStep:horizon;
 frame = 0;
-col = {[0, 0, 1],[1, 0, 0],[0, 0.75, 0.75],[0.75, 0, 0.75],[0.4, 0.4, 0.4],[0.9290, 0.6940, 0.1250]	...
+col = {[0, 0, 1],[1, 0, 0],[0, 0.75, 0.75],[0.75, 0, 0.75],[1,1,1],[0.8196,0.7098,0.0078]...
     ,[0/255 204/255 55/255],[1 1 1]	};
 
 for t = time
@@ -69,7 +69,7 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.k');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{2});
+            c(i) = circle(xx(i),yy(i),HD(i),col{6});
             hold on;
         elseif PathNumber == 3
             % path #3
@@ -99,14 +99,14 @@ for t = time
             yy(i) = roadLength+3*mergeLength/4;
             hh(i) = plot(xx(i),yy(i),'.r');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{5});
+            c(i) = circle(xx(i),yy(i),HD(i),col{2});
             hold on
         elseif PathNumber == 6
             xx(i) = roadLength+mergeLength/4;
             yy(i) = 2*roadLength+mergeLength - xpos;
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{6});
+            c(i) = circle(xx(i),yy(i),HD(i),col{5});
             hold on;
         elseif PathNumber == 7 %&& finish == 0
             % path #1
@@ -114,7 +114,7 @@ for t = time
             yy(i) = xpos;
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{7});
+            c(i) = circle(xx(i),yy(i),HD(i),col{6});
             hold on;
         elseif PathNumber == 8 %&& finish == 0
             % path #1
@@ -122,7 +122,7 @@ for t = time
             yy(i) = xpos;
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            c(i) = circle(xx(i),yy(i),HD(i),col{4});
             hold on;
         elseif PathNumber == 9
             if xpos< roadLength+3*mergeLength/4
@@ -134,7 +134,7 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            c(i) = circle(xx(i),yy(i),HD(i),col{3});
             hold on;
             
         elseif PathNumber == 10
@@ -147,7 +147,7 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            c(i) = circle(xx(i),yy(i),HD(i),col{3});
             hold on;
         elseif PathNumber == 11
             if xpos< roadLength+intersectionDistance+7*mergeLength/4
@@ -159,7 +159,7 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            c(i) = circle(xx(i),yy(i),HD(i),col{3});
             hold on;
         elseif PathNumber == 12
             if xpos< roadLength+intersectionDistance+5*mergeLength/4
@@ -171,7 +171,7 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            c(i) = circle(xx(i),yy(i),HD(i),col{3});
             hold on;
         elseif PathNumber == 13
             if xpos < roadLength+mergeLength/4
@@ -186,7 +186,7 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            c(i) = circle(xx(i),yy(i),HD(i),col{6});
             hold on;
         elseif PathNumber == 14
             if xpos < roadLength+mergeLength/4
@@ -201,7 +201,7 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            c(i) = circle(xx(i),yy(i),HD(i),col{6});
             hold on;
         elseif PathNumber == 15
             if xpos < roadLength+3*mergeLength/4
@@ -213,7 +213,7 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            c(i) = circle(xx(i),yy(i),HD(i),col{6});
             hold on;  
         elseif PathNumber == 16
             if xpos < roadLength+mergeLength/4
@@ -225,7 +225,7 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            c(i) = circle(xx(i),yy(i),HD(i),col{1});
             hold on;
         elseif PathNumber == 17
             if xpos < roadLength+mergeLength/4
@@ -240,7 +240,7 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            c(i) = circle(xx(i),yy(i),HD(i),col{1});
             hold on;              
         elseif PathNumber == 18
             if xpos < roadLength+mergeLength/4
@@ -255,7 +255,7 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            c(i) = circle(xx(i),yy(i),HD(i),col{1});
             hold on; 
         elseif PathNumber == 19
             if xpos < roadLength+3*mergeLength/4
@@ -267,7 +267,7 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            c(i) = circle(xx(i),yy(i),HD(i),col{1});
             hold on; 
         elseif PathNumber == 20
             if xpos < roadLength+intersectionDistance+7*mergeLength/4
@@ -279,7 +279,7 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            c(i) = circle(xx(i),yy(i),HD(i),col{2});
             hold on;
         elseif PathNumber == 21
             if xpos < roadLength+intersectionDistance+5*mergeLength/4
@@ -291,7 +291,7 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            c(i) = circle(xx(i),yy(i),HD(i),col{2});
             hold on;
         elseif PathNumber == 22
             if xpos < roadLength+3*mergeLength/4
@@ -303,7 +303,7 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            c(i) = circle(xx(i),yy(i),HD(i),col{2});
             hold on;
         elseif PathNumber == 23
             if xpos < roadLength+mergeLength/4
@@ -315,7 +315,7 @@ for t = time
             end
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{8});
+            c(i) = circle(xx(i),yy(i),HD(i),col{2});
             hold on;
         elseif PathNumber == 24
             if xpos< roadLength+3*mergeLength/4
@@ -369,7 +369,7 @@ for t = time
             end 
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{6});
+            c(i) = circle(xx(i),yy(i),HD(i),col{5});
             hold on;
         elseif PathNumber == 28
             if xpos < roadLength+3* mergeLength/4
@@ -384,7 +384,7 @@ for t = time
             end 
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{6});
+            c(i) = circle(xx(i),yy(i),HD(i),col{5});
             hold on;
         elseif PathNumber == 29
             if xpos < roadLength+3* mergeLength/4
@@ -396,7 +396,7 @@ for t = time
             end 
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{6});
+            c(i) = circle(xx(i),yy(i),HD(i),col{5});
             hold on;
         elseif PathNumber == 30
             if xpos < roadLength+mergeLength/4
@@ -408,7 +408,7 @@ for t = time
             end 
             hh(i) = plot(xx(i),yy(i),'.m');
             HD(i) = gamma + vpos*phi;
-            c(i) = circle(xx(i),yy(i),HD(i),col{6});
+            c(i) = circle(xx(i),yy(i),HD(i),col{5});
             hold on;             
             
             

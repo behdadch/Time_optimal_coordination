@@ -10,7 +10,7 @@ gamma = 4;
 phi = 0.1;
 %%
 
-timeStep = 0.1; %% change the speed of animation
+timeStep = 0.5; %% change the speed of animation
 flow_title = [];
 horizon = max(vehiclesSchedules(:));
 switch  nargin

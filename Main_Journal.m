@@ -21,7 +21,7 @@ timeHeadway = 1.5;
 totalZones = 22; %Number of zones
 
 totalPath =  30;
-totalVehicles = 90; %Number of vehicles
+totalVehicles = 30; %Number of vehicles
 %%
 global FIFO
 
@@ -29,7 +29,7 @@ ANIMATION = false;
 PLOT = false;
 RANDOM = true;
 CONSTRAINT = true;
-ANIMATIONPP = false;
+ANIMATIONPP = true;
 SAVEVIDEO = false;
 INPUT = false;
 CENTRALIZED = false;
@@ -51,7 +51,7 @@ if INPUT
     RANDOM = false; %this is to make sure we do not use RANDOM by mistake
 else
     if RANDOM
-        rng(15,'twister');
+        rng(69,'twister');
         TZeros = randomTimeGen(totalVehicles);
     else
         %%

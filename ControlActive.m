@@ -1,5 +1,7 @@
 function F = ControlActive(x,t0,tm,p0,pm,v0,vm,U)
   %UControlActive --> Uncons
+  %Control constraint is activated and then we exit to the unconstrained
+  %arc
 % F(1) = 0.5*a*t0^2+b*t0+c-v0;
 % F(2) = (1/6)*a*t0^3+0.5*b*t0^2+c*t0+d-p0;
 % F(3) = U*tm+f-vm;

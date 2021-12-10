@@ -1,32 +1,24 @@
-function [zone,index,finish]=zoneCheck(vehicleIndex,position,pathInfo,path)
+function [zone,index,finish]=zoneCheck(vehicleIndex,time,pathInfo,path)
 %This function will find zone that CAV is travelling through from the
-%position of the CAV
+%schedule of the CAV
 finish = 0;
-global roadLength
-global mergeLength
-L = roadLength;
-S = mergeLength;
-p=position;
+global T
+
 x = vehicleIndex;
 PathNumber = path(x);
-if (PathNumber==1)
-    distance = [0,L,L+0.5*S,L+S,2*L+S];
-elseif (PathNumber==2)
-    distance = [0,L,L+S/2,2*L+S/2,2*L+S,2*L+(3*S)/2,3*L+(3*S)/2];
-elseif (PathNumber==3)
-    distance = [0,L,L+S/2,L+S,2*L+S,2*L+(3*S)/2,2*L+2*S,3*L+2*S];
-elseif (PathNumber==4)
-    distance = [0,L,L+S/2,L+S,L+(3*S)/2,2*L+(3*S)/2,2*L+(4*S)/2,2*L+(5*S)/2,2*L+3*S,3*L+3*S];
-end
+j = find(T(x,:) == max(T(x,:)))-1;
 
-if max(distance)< p
+if T(x,j+1) < time %CAV exited the control zone
     zone = nan;
     index = nan; 
     finish = 1;
     return
+elseif T(x,j)<= time %CAV is at the last zone
+index = j;    
+else
+index = find(T(x,:)== min(T(x,T(x,:)>time)))-1;
 end
-index = find(distance == min(distance(distance>p)))-1;
-  
+
 try
 zone = pathInfo(PathNumber,index);
 catch

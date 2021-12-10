@@ -56,20 +56,20 @@ The schduling problem in the upper-level planning relies on IBM CPLEX, which nee
 
 "Build environment geometry for Animation"
 
-13. [pos,vel,control,solved]=controller(i,j,type,pathInfo,time,path,solved,z)
+### 13. [pos,vel,control,solved]=controller(i,j,type,pathInfo,time,path,solved,z)
 
 
-14. [b,c]= timeMatrix(pStart,pEnd,vStart,vEnd,tEnter,tExit,Acc)
+### 14. [b,c]= timeMatrix(pStart,pEnd,vStart,vEnd,tEnter,tExit,Acc)
 
 
-15. [a,b,c,d]= energyMatrix(t,tm,p,pm,v,vm)
+### 15. [a,b,c,d]= energyMatrix(t,tm,p,pm,v,vm)
 
 
-16. [a,b,c,d,f,g,t1]= UlimMatrix(t_0,t_m,p_0,p_m,v_0,v_m,u_min)
+### 16. [a,b,c,d,f,g,t1]= UlimMatrix(t_0,t_m,p_0,p_m,v_0,v_m,u_min)
 
 
-17. F = ControlActive(x,t0,tm,p0,pm,v0,vm,U)
+### 17. F = ControlActive(x,t0,tm,p0,pm,v0,vm,U)
 
 
-18. F = UmaxUnconUmin(x,t0,tm,p0,pm,v0,vm,U1,U2)
+### 18. F = UmaxUnconUmin(x,t0,tm,p0,pm,v0,vm,U1,U2)
 

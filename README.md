@@ -13,9 +13,11 @@
 ### Functions
 
 1. timeArray = randomTimeGen(number) 
+
 *Create a random entry time for number vehicles based on poission distribution*
 
-2. conflictFinder(path,pathInfo,totalVehicles); 
+2. conflictFinder(path,pathInfo,totalVehicles)
+
   *This function will find the conflict set for the vehicle i with respect to all the vehicles with smaller indices (FCFS) and push it into the global variable "conflict" *
 3. ReleaseDeadlineFinder(path,pathInfo,totalVehicles,z)
 
